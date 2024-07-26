@@ -1,0 +1,35 @@
+name: Deploy Java Project to Tomcat
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17' 
+
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Deploy to Tomcat Server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${SSH_PRIVATE_KEY}" > ~/.ssh/private_key
+          chmod 600 ~/.ssh/private_key
+          ssh-keyscan ${SSH_HOST} >> ~/.ssh/known_hosts
+          scp -i ~/.ssh/private_key target/mavenproject1-1.0-SNAPSHOT.war ${SSH_USERNAME}@${SSH_HOST}:/opt/tomcat/webapps/
+          rm ~/.ssh/private_key
