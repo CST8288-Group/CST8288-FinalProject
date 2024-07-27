@@ -32,5 +32,5 @@ jobs:
           echo "${SSH_PRIVATE_KEY}" > ~/.ssh/private_key
           chmod 600 ~/.ssh/private_key
           ssh-keyscan ${SSH_HOST} >> ~/.ssh/known_hosts
-          scp -i ~/.ssh/private_key target/mavenproject1-1.0-SNAPSHOT.war ${SSH_USERNAME}@${SSH_HOST}:/opt/tomcat/webapps/
+          scp -i ~/.ssh/private_key target/myapp.war ${SSH_USERNAME}@${SSH_HOST}:/opt/tomcat/webapps/
           rm ~/.ssh/private_key
