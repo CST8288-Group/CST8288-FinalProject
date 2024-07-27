@@ -1,1 +1,7 @@
+com\FWRP\servlet\Login.class
+com\FWRP\servlet\Register.class
+com\FWRP\dto\User.class
+com\FWRP\utils\Constant.class
 com\FWRP\servlet\HelloServlet.class
+com\FWRP\servlet\Logout.class
+com\FWRP\utils\DBConnection.class
