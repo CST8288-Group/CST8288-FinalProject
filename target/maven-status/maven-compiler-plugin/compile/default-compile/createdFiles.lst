@@ -1,7 +1,10 @@
-com\FWRP\servlet\Login.class
-com\FWRP\servlet\Register.class
+com\FWRP\servlet\VerifyServlet.class
+com\FWRP\dao\UserDao.class
+com\FWRP\servlet\LogoutServlet.class
+com\FWRP\servlet\LoginServlet.class
+com\FWRP\servlet\RegisterServlet.class
 com\FWRP\dto\User.class
 com\FWRP\utils\Constant.class
+com\FWRP\utils\Mail.class
 com\FWRP\servlet\HelloServlet.class
-com\FWRP\servlet\Logout.class
 com\FWRP\utils\DBConnection.class
