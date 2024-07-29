@@ -19,8 +19,8 @@ public class Mail {
         System.out.println("Current Working Directory: " + System.getProperty("user.dir"));
         // try (FileInputStream input = new
         // FileInputStream("/etc/myapp/mailgun.properties")) {
-        // try (FileInputStream input = new FileInputStream("./mailgun.properties")) {
-            try (FileInputStream input = new FileInputStream("/opt/tomcat/mailgun.properties")) {
+        try (FileInputStream input = new FileInputStream("./mailgun.properties")) {
+            // try (FileInputStream input = new FileInputStream("/opt/tomcat/mailgun.properties")) {
 
 
             Properties properties = new Properties();
@@ -35,7 +35,7 @@ public class Mail {
     public static void sendVerificationEmail(String email, String verificationLink) throws ServletException {
         HttpResponse<String> response = Unirest.post("https://api.mailgun.net/v3/" + domainName + "/messages")
                 .basicAuth("api", apiKey)
-                .field("from", "Excited User <noreply@" + domainName + ">")
+                .field("from", "Food Management System <noreply@" + domainName + ">")
                 .field("to", email)
                 .field("subject", "Email Verification")
                 .field("text", "Please verify your email address by clicking the link below." +
