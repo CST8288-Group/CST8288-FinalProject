@@ -19,8 +19,8 @@ public class Mail {
         System.out.println("Current Working Directory: " + System.getProperty("user.dir"));
         // try (FileInputStream input = new
         // FileInputStream("/etc/myapp/mailgun.properties")) {
-        try (FileInputStream input = new FileInputStream("./mailgun.properties")) {
-            // try (FileInputStream input = new FileInputStream("/opt/tomcat/mailgun.properties")) {
+        // try (FileInputStream input = new FileInputStream("./mailgun.properties")) {
+            try (FileInputStream input = new FileInputStream("/opt/tomcat/mailgun.properties")) {
 
 
             Properties properties = new Properties();
