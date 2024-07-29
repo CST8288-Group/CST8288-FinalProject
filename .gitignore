@@ -1,0 +1,14 @@
+
+# Compiled source files
+*.class
+*.jar
+*.war
+*.ear
+target/
+
+# Log files
+logs/
+*.log
+
+.idea/
+.vscode/
