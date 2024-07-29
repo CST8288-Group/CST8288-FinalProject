@@ -55,4 +55,8 @@
         <param-name>jdbcPassword</param-name>
         <param-value>admin123</param-value>
     </context-param>
+
+    <welcome-file-list>
+        <welcome-file>home.jsp</welcome-file>
+    </welcome-file-list>
 </web-app>
