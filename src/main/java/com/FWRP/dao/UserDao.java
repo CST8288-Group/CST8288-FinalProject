@@ -62,7 +62,7 @@ public class UserDao {
     }
 
     public User validateUser(String name, String password) throws SQLException {
-        String sql = "SELECT * FROM users WHERE name = ? AND password = ?";
+        String sql = "SELECT * FROM users WHERE name = ? AND password = ? AND verified = TRUE";
         try (Connection connection = DBConnection.getConnection(context);
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, name);

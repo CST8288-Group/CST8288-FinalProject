@@ -39,7 +39,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("userType", user.getType());
                 response.sendRedirect("home.jsp");
             } else {
-                response.sendRedirect("login.jsp?error=Invalid username or password");
+                response.sendRedirect("login.jsp?error=Invalid username or password or Email not verified");
             }
         } catch (SQLException e) {
             throw new ServletException(e);
