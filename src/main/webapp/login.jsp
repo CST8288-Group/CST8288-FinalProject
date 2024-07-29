@@ -24,7 +24,7 @@
 
         <%-- Display error messages if any --%>
         <c:if test="${param.error != null}">
-            <div class="alert alert-danger mt-3">${param.error}</div>
+            <div class="alert alert-danger mt-3">${param.error} ${param.msg}</div>
         </c:if>
 
         <p class="mt-3">Don't have an account? <a href="register.jsp">Register here</a></p>

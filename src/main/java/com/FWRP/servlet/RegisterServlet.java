@@ -45,7 +45,9 @@ public class RegisterServlet extends HttpServlet {
             userDao.registerUser(user);
             String verificationLink = request.getRequestURL().toString().replace("/register", "/verify?token=") + user.getVerificationToken();
             Mail.sendVerificationEmail(email, verificationLink);
-            response.sendRedirect("login.jsp");
+            
+
+            response.sendRedirect("login.jsp?msg=Registration successful. Please check your email for verification link.");
         } catch (SQLException e) {
             throw new ServletException("Database error during registration", e);
         } catch (Exception e) {
