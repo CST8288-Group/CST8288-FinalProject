@@ -63,7 +63,7 @@
                     + " <option value=\"1\""+(inv.getStatus()==InventoryStatus.to(InventoryStatus.Regular)?" selected":"")+">Regular</option>"
                     + " <option value=\"2\""+(inv.getStatus()==InventoryStatus.to(InventoryStatus.Donation)?" selected":"")+">For Donation</option>"
                     + " <option value=\"3\""+(inv.getStatus()==InventoryStatus.to(InventoryStatus.Discounted)?" selected":"")+">Discounted</option>"
-                    +"</select>");
+                    +"</select></td>");
                     out.println("<td><input form=\"form"+i+"\" type=\"number\" "
                     + "name=\"price\" value=\""
                     + (inv.getDiscountedPrice()==null?"":inv.getDiscountedPrice().toString())
