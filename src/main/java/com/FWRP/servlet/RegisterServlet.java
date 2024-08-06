@@ -3,7 +3,7 @@ package com.FWRP.servlet;
 import java.io.IOException;
 import java.sql.SQLException;
 import com.FWRP.dao.UserDao;
-import com.FWRP.dto.User;
+import com.FWRP.dto.UserDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -33,7 +33,7 @@ public class RegisterServlet extends HttpServlet {
        
 
 
-        User user = new User();
+        UserDTO user = new UserDTO();
         user.setName(name);
         user.setPassword(password);
         user.setEmail(email);

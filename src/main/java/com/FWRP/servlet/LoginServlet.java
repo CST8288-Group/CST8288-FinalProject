@@ -1,9 +1,10 @@
 package com.FWRP.servlet;
 
+import com.FWRP.controller.UserType;
 import java.io.IOException;
 import java.sql.SQLException;
 import com.FWRP.dao.UserDao;
-import com.FWRP.dto.User;
+import com.FWRP.dto.UserDTO;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -31,12 +32,12 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         try {
-            User user = userDao.validateUser(username, password);
+            UserDTO user = userDao.validateUser(username, password);
             if (user != null) {
                 HttpSession session = request.getSession();
                 session.setAttribute("username", user.getName());
                 session.setAttribute("userId", user.getId());
-                session.setAttribute("userType", user.getType());
+                session.setAttribute("userType", UserType.from(user.getType()));
                 response.sendRedirect("home.jsp");
             } else {
                 response.sendRedirect("login.jsp?error=Invalid username or password or Email not verified");
