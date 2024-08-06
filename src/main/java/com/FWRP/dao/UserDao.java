@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.FWRP.dto.User;
+import com.FWRP.dto.UserDTO;
 import com.FWRP.utils.DBConnection;
 import jakarta.servlet.ServletContext;
 
@@ -15,7 +15,7 @@ public class UserDao {
         this.context = context;
     }
 
-    public void registerUser(User user) throws SQLException {
+    public void registerUser(UserDTO user) throws SQLException {
         String sql = "INSERT INTO users (name, password, email, type, address, verification_token, verified) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DBConnection.getConnection(context);
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -30,7 +30,7 @@ public class UserDao {
         }
     }
 
-    public void verifyUser(User user) throws SQLException {
+    public void verifyUser(UserDTO user) throws SQLException {
         String query = "UPDATE users SET verified = TRUE, verification_token = NULL WHERE id = ?";
         try (Connection connection = DBConnection.getConnection(context);
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -39,14 +39,14 @@ public class UserDao {
         }
     }
 
-    public User findByVerificationToken(String token) throws SQLException {
+    public UserDTO findByVerificationToken(String token) throws SQLException {
         String sql = "SELECT * FROM users WHERE verification_token = ?";
         try (Connection connection = DBConnection.getConnection(context);
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, token);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                User user = new User();
+                UserDTO user = new UserDTO();
                 user.setId(resultSet.getLong("id"));
                 user.setName(resultSet.getString("name"));
                 user.setPassword(resultSet.getString("password"));
@@ -61,7 +61,7 @@ public class UserDao {
         return null;
     }
 
-    public User validateUser(String name, String password) throws SQLException {
+    public UserDTO validateUser(String name, String password) throws SQLException {
         String sql = "SELECT * FROM users WHERE name = ? AND password = ? AND verified = TRUE";
         try (Connection connection = DBConnection.getConnection(context);
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -69,7 +69,8 @@ public class UserDao {
             statement.setString(2, password);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                User user = new User();
+                UserDTO user = new UserDTO();
+                user.setId(resultSet.getLong("id"));
                 user.setName(resultSet.getString("name"));
                 user.setPassword(resultSet.getString("password"));
                 user.setEmail(resultSet.getString("email"));

@@ -3,7 +3,7 @@ package com.FWRP.servlet;
 import java.io.IOException;
 import java.sql.SQLException;
 import com.FWRP.dao.UserDao;
-import com.FWRP.dto.User;
+import com.FWRP.dto.UserDTO;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -29,7 +29,7 @@ public class VerifyServlet extends HttpServlet {
         String token = request.getParameter("token");
 
         try {
-            User user = userDao.findByVerificationToken(token);
+            UserDTO user = userDao.findByVerificationToken(token);
             if (user != null) {
                 userDao.verifyUser(user);
                 response.sendRedirect("verify-success.jsp");
