@@ -42,9 +42,9 @@
             <br>
             <label for="status">Status: </label>
             <select name="status" id="status" required>
-                <option value="1">Normal</option>
-                <option value="2">Discount</option>
-                <option value="3">Donation</option>
+                <option value="<%= InventoryStatus.to(InventoryStatus.Regular) %>">Regular</option>
+                <option value="<%= InventoryStatus.to(InventoryStatus.Donation) %>">Donation</option>
+                <option value="<%= InventoryStatus.to(InventoryStatus.Discounted) %>">Discounted</option>
             </select>
             <br>
             <label for="price">Discount Price </label>

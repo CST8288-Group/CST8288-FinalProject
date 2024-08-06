@@ -60,9 +60,9 @@
                     out.println("<td><input form=\"form"+i+"\" type=\"date\" "
                     + "name=\"expiration\" value=\""+ inv.getExpiration() +"\"</td>");
                     out.println("<td><select form=\"form"+i+"\" name=\"status\">"
-                    + " <option value=\"1\""+(inv.getStatus()==1?" selected":"")+">Regular</option>"
-                    + " <option value=\"2\""+(inv.getStatus()==2?" selected":"")+">For Donation</option>"
-                    + " <option value=\"3\""+(inv.getStatus()==3?" selected":"")+">Discounted</option>"
+                    + " <option value=\"1\""+(inv.getStatus()==InventoryStatus.to(InventoryStatus.Regular)?" selected":"")+">Regular</option>"
+                    + " <option value=\"2\""+(inv.getStatus()==InventoryStatus.to(InventoryStatus.Donation)?" selected":"")+">For Donation</option>"
+                    + " <option value=\"3\""+(inv.getStatus()==InventoryStatus.to(InventoryStatus.Discounted)?" selected":"")+">Discounted</option>"
                     +"</select>");
                     out.println("<td><input form=\"form"+i+"\" type=\"number\" "
                     + "name=\"price\" value=\""
