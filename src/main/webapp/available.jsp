@@ -53,7 +53,7 @@
                 UserDTO user = new UserDTO();
                 Long userId = (Long)session.getAttribute("userId");
                 user.setId(userId);
-                final InventoryDAO dao = new InventoryDAO(context);
+                InventoryDAO dao = new InventoryDAO(context);
                 InventoryStatus type = userType == UserType.Charity
                                        ? InventoryStatus.Donation
                                        : InventoryStatus.Discounted;

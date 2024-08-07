@@ -10,6 +10,8 @@ package com.FWRP.dto;
  * @author walter
  */
 public class LocationDTO {
+    private int id;
+    private String name;
 
     /**
      * @return the id
@@ -38,6 +40,4 @@ public class LocationDTO {
     public void setName(String name) {
         this.name = name;
     }
-private int id;
-private String name;
 }

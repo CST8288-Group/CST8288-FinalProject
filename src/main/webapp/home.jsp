@@ -26,7 +26,7 @@
             switch (userType) {
                 case Retailer:
                     out.println("<p>User Type: Food Retailer</p>");
-                    out.println("<p><a href=\"\">Set Location</a></p>");
+                    out.println("<p><a href=\"RetailerSettings.jsp\">Retailer Settings</a></p>");
                     out.println("<p><a href=\"additemform.jsp\">Add Item</a></p>");
                     out.println("<p><a href=\"inventory.jsp\">Inventory</a></p>");
                     out.println("<p><a href=\"expiring.jsp\">Expiring items</a></p>");
