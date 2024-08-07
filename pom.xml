@@ -6,6 +6,15 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>java-final-project</name>
+
+    <profiles>
+        <profile>
+            <id>skip-tests</id>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
+        </profile>
+    </profiles>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
