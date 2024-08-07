@@ -10,11 +10,12 @@ package com.FWRP.dto;
  */
 public class NotificationDTO {
     private int id;
-    private Long timestamp;
+    private java.sql.Timestamp timestamp;
     private int type;
     private int status;
-    private int userid;
-    private int inventoryid;
+    private int userId;
+    private InventoryDTO inventory;
+
 
     /**
      * @return the id
@@ -33,14 +34,14 @@ public class NotificationDTO {
     /**
      * @return the timestamp
      */
-    public Long getTimestamp() {
+    public java.sql.Timestamp getTimestamp() {
         return timestamp;
     }
 
     /**
      * @param timestamp the timestamp to set
      */
-    public void setTimestamp(Long timestamp) {
+    public void setTimestamp(java.sql.Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -71,34 +72,32 @@ public class NotificationDTO {
     public void setStatus(int status) {
         this.status = status;
     }
-
-    /**
-     * @return the userid
-     */
-    public int getUserid() {
-        return userid;
-    }
-
-    /**
-     * @param userid the userid to set
-     */
-    public void setUserid(int userid) {
-        this.userid = userid;
-    }
-
-    /**
-     * @return the inventoryid
-     */
-    public int getInventoryid() {
-        return inventoryid;
-    }
-
-    /**
-     * @param inventoryid the inventoryid to set
-     */
-    public void setInventoryid(int inventoryid) {
-        this.inventoryid = inventoryid;
-    }
     
-    
+    /**
+     * @return the userId
+     */
+    public int getUserId() {
+        return userId;
+    }
+
+    /**
+     * @param userId the userId to set
+     */
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * @return the inventory
+     */
+    public InventoryDTO getInventory() {
+        return inventory;
+    }
+
+    /**
+     * @param inventory the inventory to set
+     */
+    public void setInventory(InventoryDTO inventory) {
+        this.inventory = inventory;
+    }
 }
