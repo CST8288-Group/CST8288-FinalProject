@@ -25,16 +25,25 @@
         if (userType != null) {
             switch (userType) {
                 case Retailer:
-                    out.println("<p>Food Retailer</p>");
+                    out.println("<p>User Type: Food Retailer</p>");
+                    out.println("<p><a href=\"\">Set Location</a></p>");
                     out.println("<p><a href=\"additemform.jsp\">Add Item</a></p>");
                     out.println("<p><a href=\"inventory.jsp\">Inventory</a></p>");
                     out.println("<p><a href=\"expiring.jsp\">Expiring items</a></p>");
                     break;
                 case Consumer:
-                    out.println("<p>Consumer</p>");
+                    out.println("<p>User Type: Consumer</p>");
+                    out.println("<p><a href=\"available.jsp\">View Discounted Food</a></p>");
+                    out.println("<p><a href=\"transfers.jsp\">View Purchased Food</a></p>");
+                    out.println("<p><a href=\"\">View Alerts</a></p>");
+                    out.println("<p><a href=\"\">Change Alerts Subscriptions</a></p>");
                     break;
                 case Charity:
-                    out.println("<p>Charitable Organization</p>");
+                    out.println("<p>User Type: Charitable Organization</p>");
+                    out.println("<p><a href=\"available.jsp\">View Food Donations</a></p>");
+                    out.println("<p><a href=\"transfers.jsp\">View Claimed Food</a></p>");
+                    out.println("<p><a href=\"alerts.jsp\">View Alerts</a></p>");
+                    out.println("<p><a href=\"alertsettings.jsp\">Change Alerts Subscriptions</a></p>");
                     break;
                 default:
                     out.println("<p>Unknown User Type</p>");
@@ -44,7 +53,6 @@
             out.println("<p>Unknown User Type</p>");
         }
     %>
-        <p>This is your home page.</p>
         <a class="btn btn-danger" href="logout">Logout</a>
     </div>
 

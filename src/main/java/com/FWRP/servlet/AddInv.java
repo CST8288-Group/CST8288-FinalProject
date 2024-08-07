@@ -5,6 +5,7 @@ import com.FWRP.dao.FoodItemDAO;
 import com.FWRP.dao.InventoryDAO;
 import com.FWRP.dto.FoodItemDTO;
 import com.FWRP.dto.InventoryDTO;
+import com.FWRP.dto.RetailerDTO;
 import java.io.IOException;
 import java.sql.Date;
 import com.FWRP.dto.UserDTO;
@@ -52,13 +53,15 @@ public class AddInv extends HttpServlet {
         String price = request.getParameter("discountPrice");
         InventoryDTO invDTO = new InventoryDTO();
         FoodItemDTO fiDTO = new FoodItemDTO();
+        RetailerDTO retailer = new RetailerDTO();
         FoodItemDAO foodDao = new FoodItemDAO(context);
+        retailer.setUserId(userId.intValue());
         fiDTO.setName(itemName);
         foodDao.getOrCreate(fiDTO);
         invDTO.setId(-1);
         invDTO.setFoodItem(fiDTO);
         invDTO.setQuantity(Integer.parseInt(quantity));
-        invDTO.setRetailerId(userId.intValue());
+        invDTO.setRetailer(retailer);
         invDTO.setStatus(Integer.parseInt(status));
         String[] yyyymmdd = expiry.split("-");
         invDTO.setExpiration(new Date(Integer.parseInt(yyyymmdd[0])-1900,

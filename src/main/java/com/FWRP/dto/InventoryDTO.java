@@ -19,7 +19,7 @@ public class InventoryDTO {
     private int status;
     private BigDecimal discountedPrice;
     private FoodItemDTO foodItem;
-    private int retailerId;
+    private RetailerDTO retailer;
 
     /**
      * @return the id
@@ -90,20 +90,6 @@ public class InventoryDTO {
     public void setDiscountedPrice(BigDecimal discountedPrice) {
         this.discountedPrice = discountedPrice;
     }
-    
-    /**
-     * @return the retailerId
-     */
-    public int getRetailerId() {
-        return retailerId;
-    }
-
-    /**
-     * @param retailerId the retailerId to set
-     */
-    public void setRetailerId(int retailerId) {
-        this.retailerId = retailerId;
-    }
 
     /**
      * @return the foodItem
@@ -117,6 +103,20 @@ public class InventoryDTO {
      */
     public void setFoodItem(FoodItemDTO foodItem) {
         this.foodItem = foodItem;
+    }
+
+    /**
+     * @return the retailer
+     */
+    public RetailerDTO getRetailer() {
+        return retailer;
+    }
+
+    /**
+     * @param retailer the retailer to set
+     */
+    public void setRetailer(RetailerDTO retailer) {
+        this.retailer = retailer;
     }
 
 }

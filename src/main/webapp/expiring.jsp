@@ -54,7 +54,7 @@
                     out.println("<td><input form=\"form"+i+"\" type=\"text\" "
                     + "name=\"itemname\" value=\""+ inv.getFoodItem().getName() +"\"</td>");
                     out.println("<td><input form=\"form"+i+"\" type=\"number\" "
-                    + "name=\"quantity\" value=\""+ inv.getQuantity() +"\"</td>");
+                    + "name=\"quantity\" min=\"0\" value=\""+ inv.getQuantity() +"\"</td>");
                     out.println("<td><input form=\"form"+i+"\" type=\"date\" "
                     + "name=\"expiration\" value=\""+ inv.getExpiration() +"\"</td>");
                     out.println("<td><select form=\"form"+i+"\" name=\"status\">"
@@ -63,14 +63,14 @@
                     + " <option value=\"3\""+(inv.getStatus()==3?" selected":"")+">Discounted</option>"
                     +"</select>");
                     out.println("<td><input form=\"form"+i+"\" type=\"number\" "
-                    + "name=\"price\" value=\""
+                    + "name=\"price\" min=\"0\" value=\""
                     + (inv.getDiscountedPrice()==null?"":inv.getDiscountedPrice().toString())
                     +"\" step=\".01\"></td>");
-                    out.println("<td><input form=\"form"+i+"\" type=\"submit\" value=\"Update\"/></input></td>");
+                    out.println("<td><input form=\"form"+i+"\" type=\"submit\" value=\"Update\"></td>");
                     out.println("</form>");
                     out.println("<td><form id=\"del"+i+"\" action=\"DeleteInv\" method=\"POST\">"
                     + "<input type=\"hidden\" name=\"id\" value=\"" + inv.getId()+"\" />"
-                    + "<input type=\"submit\" value=\"Delete\"/></input></form></td>");
+                    + "<input type=\"submit\" value=\"Delete\"/></form></td>");
                     out.println("</tr>");
                 }
             %>

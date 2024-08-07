@@ -4,35 +4,18 @@
  */
 package com.FWRP.dto;
 import java.math.BigDecimal;
-/**
- *
- * @author Tiantian
- */
+
 public class TransactionDTO {
     private int id;
     private int type;
     private int quantity;
-    private Long lastUpdate;
+    private java.sql.Timestamp lastUpdate;
     private BigDecimal price;
     private int status;
-    private Long datePlaced;
-    private int userid;
-    private int inventoryid;
-
-    /**
-     * @return the id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
+    private java.sql.Timestamp datePlaced;
+    private int userId;
+    private InventoryDTO inventory;
+    
     /**
      * @return the type
      */
@@ -64,14 +47,14 @@ public class TransactionDTO {
     /**
      * @return the lastUpdate
      */
-    public Long getLastUpdate() {
+    public java.sql.Timestamp getLastUpdate() {
         return lastUpdate;
     }
 
     /**
      * @param lastUpdate the lastUpdate to set
      */
-    public void setLastUpdate(Long lastUpdate) {
+    public void setLastUpdate(java.sql.Timestamp lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
@@ -106,46 +89,57 @@ public class TransactionDTO {
     /**
      * @return the datePlaced
      */
-    public Long getDatePlaced() {
+    public java.sql.Timestamp getDatePlaced() {
         return datePlaced;
     }
 
     /**
      * @param datePlaced the datePlaced to set
      */
-    public void setDatePlaced(Long datePlaced) {
+    public void setDatePlaced(java.sql.Timestamp datePlaced) {
         this.datePlaced = datePlaced;
     }
-
+    
     /**
-     * @return the userid
+     * @return the inventory
      */
-    public int getUserid() {
-        return userid;
+    public InventoryDTO getInventory() {
+        return inventory;
     }
 
     /**
-     * @param userid the userid to set
+     * @param inventory the inventory to set
      */
-    public void setUserid(int userid) {
-        this.userid = userid;
+    public void setInventory(InventoryDTO inventory) {
+        this.inventory = inventory;
     }
 
     /**
-     * @return the inventoryid
+     * @return the id
      */
-    public int getInventoryid() {
-        return inventoryid;
+    public int getId() {
+        return id;
     }
 
     /**
-     * @param inventoryid the inventoryid to set
+     * @param id the id to set
      */
-    public void setInventoryid(int inventoryid) {
-        this.inventoryid = inventoryid;
+    public void setId(int id) {
+        this.id = id;
     }
-    
-    
-    
-    
+
+    /**
+     * @return the userId
+     */
+    public int getUserId() {
+        return userId;
+    }
+
+    /**
+     * @param userId the userId to set
+     */
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
 }
