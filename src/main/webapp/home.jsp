@@ -43,7 +43,7 @@
                     out.println("<p><a href=\"available.jsp\">View Food Donations</a></p>");
                     out.println("<p><a href=\"transfers.jsp\">View Claimed Food</a></p>");
                     out.println("<p><a href=\"alerts.jsp\">View Alerts</a></p>");
-                    out.println("<p><a href=\"preferences.jsp\">Change Preferenes & Subscriptions</a></p>");
+                    out.println("<p><a href=\"preferences.jsp\">Change Preferences & Subscriptions</a></p>");
                     break;
                 default:
                     out.println("<p>Unknown User Type</p>");
