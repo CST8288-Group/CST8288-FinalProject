@@ -1,3 +1,4 @@
+package com.FWRP.dao;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,7 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.FWRP.dao.UserDao;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
