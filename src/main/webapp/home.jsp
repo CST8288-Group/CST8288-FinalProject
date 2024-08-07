@@ -35,7 +35,7 @@
                     out.println("<p>User Type: Consumer</p>");
                     out.println("<p><a href=\"available.jsp\">View Discounted Food</a></p>");
                     out.println("<p><a href=\"transfers.jsp\">View Purchased Food</a></p>");
-                    out.println("<p><a href=\"\">View Alerts</a></p>");
+                    out.println("<p><a href=\"alerts.jsp\">View Alerts</a></p>");
                     out.println("<p><a href=\"\">Change Alerts Subscriptions</a></p>");
                     break;
                 case Charity:

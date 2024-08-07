@@ -6,6 +6,7 @@ import com.FWRP.dto.UserDTO;
 import com.FWRP.dto.InventoryDTO;
 import com.FWRP.dto.FoodItemDTO;
 import com.FWRP.controller.InventoryStatus;
+import com.FWRP.dto.NotificationDTO;
 import com.FWRP.dto.RetailerDTO;
 import com.FWRP.utils.DBConnection;
 import jakarta.servlet.ServletContext;
@@ -132,6 +133,8 @@ public class InventoryDAO {
            }
             // Log and clear any warnings
             logAndClearSQLWarnings("InventoryDAO",con);
+            
+            doNotifications(inv);
         } catch (SQLException e) {
             e.printStackTrace();
        }
@@ -153,6 +156,8 @@ public class InventoryDAO {
             pstmt.executeUpdate();
             // Log and clear any warnings
             logAndClearSQLWarnings("InventoryDAO",con);
+            
+            doNotifications(inv);
         } catch (SQLException e) {
             e.printStackTrace();
        }
@@ -211,5 +216,36 @@ public class InventoryDAO {
             e.printStackTrace();
         }
         return result;
+    }
+    
+    void doNotifications(InventoryDTO inv) {
+        String sql = "SELECT S.userId "
+                + "FROM Subscription S, Retailer R, PreferedFood PF "
+                + "WHERE R.userId = ? AND R.locationId = S.locationId "
+                + "AND PF.foodItemId = ?;";
+        try (Connection con = DBConnection.getConnection(context);
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, inv.getRetailer().getUserId());
+            pstmt.setInt(2, inv.getFoodItem().getId());
+            NotificationDAO alertDao = new NotificationDAO(context);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    // Create DTO and populate it
+                    NotificationDTO alert = new NotificationDTO();
+                    
+                    alert.setInventory(inv);
+                    alert.setUserId(rs.getInt(1));
+                    alertDao.newNotification(alert);
+                }
+                // Log and clear any warnings
+                logAndClearSQLWarnings("InventoryDAO",con);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

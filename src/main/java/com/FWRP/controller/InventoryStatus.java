@@ -19,7 +19,7 @@ public enum InventoryStatus {
     private final int val;
     private InventoryStatus(int v) { val = v; }
     
-    // Mapping from integer to UserType
+    // Mapping from integer to InventoryStatus
     private static final Map<Integer, InventoryStatus> _map = new HashMap<Integer, InventoryStatus>();
     static
     {
@@ -30,7 +30,7 @@ public enum InventoryStatus {
     /**
      * Get InventoryType from value
      * @param value Value
-     * @return invType
+     * @return InventoryStatus
      */
     public static InventoryStatus from(int value)
     {

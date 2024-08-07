@@ -62,7 +62,7 @@
                     i++;
                     out.println("<tr>");
                     out.println("<form id=\"form"+i+"\" action=\"Transfer\" method=\"POST\">");
-                    out.println("<input type=\"hidden\" name=\"id\" value=\"" + inv.getId()+"\"></input>");
+                    out.println("<input type=\"hidden\" name=\"id\" value=\"" + inv.getId()+"\">");
                     out.println("<td>"+ inv.getFoodItem().getName() +"</td>");
                     out.println("<td>"+ inv.getQuantity() +"</td>");
                     out.println("<td>"+ inv.getExpiration() +"</td>");
@@ -71,14 +71,14 @@
                     }
                     out.println("<td><input form=\"form"+i+"\" type=\"number\" "
                     + "name=\"desiredQuantity\" value=\"0\""
-                    + " min=\"0\" max=\""+inv.getQuantity()+"\"></input></td>");
+                    + " min=\"0\" max=\""+inv.getQuantity()+"\"></td>");
                     out.print("<td><input type=\"submit\" value=\"");
                     if (userType == UserType.Charity) {
                        out.print("Claim");
                     } else {
                         out.print("Purchase");
                     }
-                    out.println("\"></input></td></form>");
+                    out.println("\"></td></form>");
                     out.println("<td></td>");
                     out.println("</tr>");
                 }
