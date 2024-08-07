@@ -5,7 +5,7 @@
 package com.FWRP.dao;
 
 import static com.FWRP.dao.DAOHelper.logAndClearSQLWarnings;
-import com.FWRP.dto.NotificationDTO;
+import com.FWRP.dto.SubscriptionDTO;
 import com.FWRP.utils.DBConnection;
 import jakarta.servlet.ServletContext;
 import java.sql.Connection;
@@ -18,72 +18,68 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
  *
  * @author Tiantian
  */
-public class NotificationDAO {
+public class SubscriptionDAO {
     private ServletContext context;
 
-    public NotificationDAO(ServletContext context) {
+    public SubscriptionDAO(ServletContext context) {
         this.context = context;
     }
     
-    public void addNotification(NotificationDTO notification) {
-        String sql = "INSERT INTO Notification (timestamp, type, status, userid, Inventoryid)"
-                + " values (?,?,?,?,?)";
+    public void addSubscription(SubscriptionDTO subscription) {
+        String sql = "INSERT INTO Subscription (userId, locationId)"
+                + " values (?,?)";
         try (Connection con = DBConnection.getConnection(context);
              PreparedStatement pstmt = con.prepareStatement(sql,RETURN_GENERATED_KEYS)) {
-            pstmt.setLong(1, notification.getTimestamp());
-            pstmt.setInt(2, notification.getType());
-            pstmt.setInt(3, notification.getStatus());
-            pstmt.setInt(4, notification.getUserid());
-            pstmt.setInt(5, notification.getInventoryid());
+            pstmt.setInt(1, subscription.getUserid());
+            pstmt.setInt(2, subscription.getLocationid());
             try {
                 boolean succeeded = pstmt.executeUpdate() > 0;
                 if (succeeded) {
                     ResultSet generatedKeys = pstmt.getGeneratedKeys();
                     if (generatedKeys.next()) {
-                        notification.setId(generatedKeys.getInt(1));
+                        subscription.setId(generatedKeys.getInt(1));
                     }
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
            }
             // Log and clear any warnings
-            logAndClearSQLWarnings("NotificationDAO",con);
+            logAndClearSQLWarnings("SubscriptionDAO",con);
         } catch (SQLException e) {
             e.printStackTrace();
        }
     }
     
-    public void updateNotification(NotificationDTO notification) {
-        String sql = "UPDATE Notification SET timestamp = ?,"
-                + " type = ?, status = ?, userId = ?,"
-                + " inventoryId = ? WHERE id = ? ";
+    public void updateSubscription(SubscriptionDTO subscription) {
+        String sql = "UPDATE Subscription SET userId = ?,"
+                + " locationId = ? WHERE id = ? ";
         try (Connection con = DBConnection.getConnection(context);
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setLong(1, notification.getTimestamp());
-            pstmt.setInt(2, notification.getType());
-            pstmt.setInt(3, notification.getStatus());
-            pstmt.setInt(4, notification.getUserid());
-            pstmt.setInt(5, notification.getInventoryid());
-            pstmt.setInt(6, notification.getId());
+            pstmt.setInt(1, subscription.getUserid());
+            pstmt.setInt(2, subscription.getLocationid());
+            pstmt.setInt(3, subscription.getId());
             pstmt.executeUpdate();
             // Log and clear any warnings
-            logAndClearSQLWarnings("NotificationDAO",con);
+            logAndClearSQLWarnings("SubscriptionDAO",con);
         } catch (SQLException e) {
             e.printStackTrace();
        }
     }
     
-    public void deleteNotification(NotificationDTO notification) {
-         String sql = "DELETE FROM Notification WHERE id = ? ";
+    public void deleteSubscription(SubscriptionDTO subscription) {
+         String sql = "DELETE FROM Subscription WHERE id = ? AND userId = ? AND locationId = ? ";
         try (Connection con = DBConnection.getConnection(context);
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, notification.getId());
+            pstmt.setInt(1, subscription.getId());
+            pstmt.setInt(2, subscription.getUserid());
+            pstmt.setInt(3, subscription.getLocationid());
             pstmt.executeUpdate();
             // Log and clear any warnings
-            logAndClearSQLWarnings("NotificationDAO",con);
+            logAndClearSQLWarnings("SubscriptionDAO",con);
         } catch (SQLException e) {
             e.printStackTrace();
        }
     }
+    
     
 }
