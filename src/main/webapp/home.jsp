@@ -36,14 +36,14 @@
                     out.println("<p><a href=\"available.jsp\">View Discounted Food</a></p>");
                     out.println("<p><a href=\"transfers.jsp\">View Purchased Food</a></p>");
                     out.println("<p><a href=\"alerts.jsp\">View Alerts</a></p>");
-                    out.println("<p><a href=\"\">Change Alerts Subscriptions</a></p>");
+                    out.println("<p><a href=\"preferences.jsp\">Change Alerts Subscriptions</a></p>");
                     break;
                 case Charity:
                     out.println("<p>User Type: Charitable Organization</p>");
                     out.println("<p><a href=\"available.jsp\">View Food Donations</a></p>");
                     out.println("<p><a href=\"transfers.jsp\">View Claimed Food</a></p>");
                     out.println("<p><a href=\"alerts.jsp\">View Alerts</a></p>");
-                    out.println("<p><a href=\"alertsettings.jsp\">Change Alerts Subscriptions</a></p>");
+                    out.println("<p><a href=\"preferences.jsp\">Change Preferenes & Subscriptions</a></p>");
                     break;
                 default:
                     out.println("<p>Unknown User Type</p>");

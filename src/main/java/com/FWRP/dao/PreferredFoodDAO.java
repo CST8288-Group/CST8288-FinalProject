@@ -5,7 +5,9 @@
 package com.FWRP.dao;
 
 import static com.FWRP.dao.DAOHelper.logAndClearSQLWarnings;
+import com.FWRP.dto.FoodItemDTO;
 import com.FWRP.dto.PreferredFoodDTO;
+import com.FWRP.dto.UserDTO;
 import com.FWRP.utils.DBConnection;
 import jakarta.servlet.ServletContext;
 import java.sql.Connection;
@@ -13,10 +15,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import java.util.ArrayList;
 
 /**
  *
- * @author Tiantian
+ * @author Tiantian, Walter
  */
 public class PreferredFoodDAO {
      private ServletContext context;
@@ -25,7 +28,35 @@ public class PreferredFoodDAO {
         this.context = context;
     }
     
-        public void addPreferredFood(PreferredFoodDTO pfood) {
+    
+    public ArrayList<FoodItemDTO> getPreferredFood(UserDTO user) {
+        ArrayList<FoodItemDTO> result = new ArrayList<>();
+        String sql =
+                  "SELECT FI.*"
+                + "FROM PreferedFood PF "
+                + "JOIN FoodItem FI ON FI.id = PF.foodItemId "
+                + "WHERE userId = ? GROUP BY FI.id ORDER BY FI.name ASC ";
+        try (Connection con = DBConnection.getConnection(context);
+            PreparedStatement pstmt = con.prepareStatement(sql)) {
+            pstmt.setLong(1, user.getId());
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    FoodItemDTO foodItemDTO = new FoodItemDTO();
+                    foodItemDTO.setId(rs.getInt("id"));
+                    foodItemDTO.setName(rs.getString("name"));
+                }
+                // Log and clear any warnings
+                logAndClearSQLWarnings("InventoryDAO",con);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    
+    public void addPreferredFood(PreferredFoodDTO pfood) {
         String sql = "INSERT INTO PreferredFood (userid, fooditemid)"
                 + " values (?,?)";
         try (Connection con = DBConnection.getConnection(context);
