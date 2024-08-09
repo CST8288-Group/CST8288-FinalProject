@@ -6,6 +6,7 @@ import com.FWRP.dto.UserDTO;
 import com.FWRP.dto.InventoryDTO;
 import com.FWRP.dto.FoodItemDTO;
 import com.FWRP.controller.InventoryStatus;
+import com.FWRP.controller.UserType;
 import com.FWRP.dto.NotificationDTO;
 import com.FWRP.dto.RetailerDTO;
 import com.FWRP.utils.DBConnection;
@@ -221,13 +222,28 @@ public class InventoryDAO {
     void doNotifications(InventoryDTO inv) {
         String sql = "SELECT S.userId "
                 + "FROM Subscription S, Retailer R, PreferedFood PF "
+                + "JOIN Users U ON U.id = S.userId "
                 + "WHERE R.userId = ? AND R.locationId = S.locationId "
-                + "AND PF.foodItemId = ?;";
+                + "AND PF.foodItemId = ? AND U.type = ?;";
+        UserType type;
+        switch (InventoryStatus.from(inv.getStatus())) {
+            case Discounted:
+                // for consumers
+                type = UserType.Consumer;
+                break;
+            case Donation:
+                // for charities
+                type = UserType.Charity;
+                break;
+            default:
+                return;
+        }
         try (Connection con = DBConnection.getConnection(context);
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            
+
             pstmt.setInt(1, inv.getRetailer().getUserId());
             pstmt.setInt(2, inv.getFoodItem().getId());
+            pstmt.setInt(3, UserType.to(type));
             NotificationDAO alertDao = new NotificationDAO(context);
 
             try (ResultSet rs = pstmt.executeQuery()) {

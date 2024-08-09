@@ -10,10 +10,21 @@ package com.FWRP.dto;
  * @author walter
  */
 public class RetailerDTO {
+
+    private static final String SELECT_ALL_RETAILER_FIELDS_TEMPLATE = "%1$s.userId, %1$s.name, %1$s.locationId";
+
     private String name;
     private LocationDTO location;
     private int userId;
-    
+
+    public RetailerDTO(){}
+
+    public RetailerDTO(String name, LocationDTO location, int userId) {
+        this.name = name;
+        this.location = location;
+        this.userId = userId;
+    }
+
     /**
      * @return the name
      */
@@ -54,5 +65,9 @@ public class RetailerDTO {
      */
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public static String getTemplatedSelectStatement(String transactionVarName) {
+        return String.format(SELECT_ALL_RETAILER_FIELDS_TEMPLATE, transactionVarName);
     }
 }
