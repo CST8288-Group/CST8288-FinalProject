@@ -1,5 +1,6 @@
 # Application instructions
 This manual will walk you through how to use this application.
+Demo Link: https://waynegan.us.kg  
 ##
 
 # 1. TomCat Installation
