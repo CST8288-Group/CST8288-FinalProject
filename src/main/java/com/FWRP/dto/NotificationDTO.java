@@ -14,7 +14,7 @@ public class NotificationDTO {
     private int type;
     private int status;
     private int userId;
-    private InventoryDTO inventory;
+    private int inventoryId;
 
 
     /**
@@ -90,14 +90,14 @@ public class NotificationDTO {
     /**
      * @return the inventory
      */
-    public InventoryDTO getInventory() {
-        return inventory;
+    public int getInventoryId() {
+        return inventoryId;
     }
 
     /**
-     * @param inventory the inventory to set
+     * @param inventoryId the inventoryId to set
      */
-    public void setInventory(InventoryDTO inventory) {
-        this.inventory = inventory;
+    public void setInventoryId(int inventoryId) {
+        this.inventoryId = inventoryId;
     }
 }

@@ -27,11 +27,13 @@ public class FoodItemDAO {
         this.context = context;
     }
     
-    public FoodItemDTO getOrCreate(FoodItemDTO foodItem) {
+    public FoodItemDTO getOrCreate(String name) {
+        FoodItemDTO foodItem = new FoodItemDTO();
+        foodItem.setName(name);
         String sql = "SELECT id FROM FoodItem WHERE name = ?";
         try (Connection con = DBConnection.getConnection(context);
              PreparedStatement statement = con.prepareStatement(sql)) {
-            statement.setString(1, foodItem.getName());
+            statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 foodItem.setId(resultSet.getInt("id"));
@@ -48,6 +50,7 @@ public class FoodItemDAO {
                     ResultSet generatedKeys = statement2.getGeneratedKeys();
                     if (generatedKeys.next()) {
                         foodItem.setId(generatedKeys.getInt(1));
+                        return foodItem;
                     }
                 }
             }

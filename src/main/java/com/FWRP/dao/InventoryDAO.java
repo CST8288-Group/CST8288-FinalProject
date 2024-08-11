@@ -30,6 +30,37 @@ public class InventoryDAO {
         this.context = context;
     }
 
+    public InventoryDTO retrieve(int inventoryId) {
+                String sql =
+                  "SELECT I.* "
+                + "FROM Inventory I "
+                + "WHERE id = ?;";
+        try (Connection con = DBConnection.getConnection(context);
+            PreparedStatement pstmt = con.prepareStatement(sql)) {
+            pstmt.setLong(1, inventoryId);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    // Create DTO and populate it
+                    InventoryDTO inv = new InventoryDTO();
+                    inv.setId(inventoryId);
+                    inv.setQuantity(rs.getInt("quantity"));
+                    inv.setExpiration(rs.getDate("expiration"));
+                    inv.setStatus(rs.getInt("status"));
+                    inv.setDiscountedPrice(rs.getBigDecimal("discountedPrice"));
+                    inv.setRetailerId(rs.getInt("retailerId"));
+                }
+                // Log and clear any warnings
+                logAndClearSQLWarnings("InventoryDAO",con);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
     public ArrayList<InventoryDTO> getInventoryForUser(UserDTO user) {
         ArrayList<InventoryDTO> result = new ArrayList<>();
         String sql =
@@ -54,9 +85,9 @@ public class InventoryDAO {
                     inv.setDiscountedPrice(rs.getBigDecimal("discountedPrice"));
                     fi.setId(rs.getInt("foodItemId"));
                     fi.setName(rs.getString("name"));
-                    inv.setFoodItem(fi);
+                    inv.setFoodItemId(rs.getInt("foodItemId"));
                     ret.setUserId(rs.getInt("retailerId"));
-                    inv.setRetailer(ret);
+                    inv.setRetailerId(rs.getInt("retailerId"));
                     // Add it to results list
                     result.add(inv);
                 }
@@ -94,9 +125,9 @@ public class InventoryDAO {
                     inv.setDiscountedPrice(rs.getBigDecimal("discountedPrice"));
                     fi.setId(rs.getInt("foodItemId"));
                     fi.setName(rs.getString("name"));
-                    inv.setFoodItem(fi);
+                    inv.setFoodItemId(rs.getInt("foodItemId"));
                     ret.setUserId(rs.getInt("retailerId"));
-                    inv.setRetailer(ret);
+                    inv.setRetailerId(rs.getInt("retailerId"));
                     // Add it to results list
                     result.add(inv);
                 }
@@ -120,8 +151,8 @@ public class InventoryDAO {
             pstmt.setDate(2, inv.getExpiration());
             pstmt.setInt(3, inv.getStatus());
             pstmt.setBigDecimal(4, inv.getDiscountedPrice());
-            pstmt.setInt(5, inv.getFoodItem().getId());
-            pstmt.setInt(6, inv.getRetailer().getUserId());
+            pstmt.setInt(5, inv.getFoodItemId());
+            pstmt.setInt(6, inv.getRetailerId());
             try {
                 boolean succeeded = pstmt.executeUpdate() > 0;
                 if (succeeded) {
@@ -153,7 +184,7 @@ public class InventoryDAO {
             pstmt.setDate(2, inv.getExpiration());
             pstmt.setInt(3, inv.getStatus());
             pstmt.setBigDecimal(4, inv.getDiscountedPrice());
-            pstmt.setInt(5, inv.getFoodItem().getId());
+            pstmt.setInt(5, inv.getFoodItemId());
             pstmt.setInt(6, inv.getId());
             pstmt.executeUpdate();
             // Log and clear any warnings
@@ -203,9 +234,9 @@ public class InventoryDAO {
                     inv.setDiscountedPrice(rs.getBigDecimal("discountedPrice"));
                     fi.setId(rs.getInt("foodItemId"));
                     fi.setName(rs.getString("name"));
-                    inv.setFoodItem(fi);
+                    inv.setFoodItemId(rs.getInt("foodItemId"));
                     ret.setUserId(rs.getInt("retailerId"));
-                    inv.setRetailer(ret);
+                    inv.setRetailerId(rs.getInt("retailerId"));
                     // Add it to results list
                     result.add(inv);
                 }
@@ -243,9 +274,9 @@ public class InventoryDAO {
         try (Connection con = DBConnection.getConnection(context);
              PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-            pstmt.setInt(1, inv.getFoodItem().getId());
+            pstmt.setInt(1, inv.getFoodItemId());
             pstmt.setInt(2, UserType.to(type));
-            pstmt.setInt(3, inv.getRetailer().getUserId());
+            pstmt.setInt(3, inv.getRetailerId());
             NotificationDAO alertDao = new NotificationDAO(context);
 
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -253,8 +284,9 @@ public class InventoryDAO {
                     // Create DTO and populate it
                     NotificationDTO alert = new NotificationDTO();
                     
-                    alert.setInventory(inv);
+                    alert.setInventoryId(inv.getId());
                     alert.setUserId(rs.getInt(1));
+                    alert.setType(inv.getStatus());
                     alert.setStatus(AlertStatus.to(AlertStatus.Unread));
                     alertDao.newNotification(alert);
                 }

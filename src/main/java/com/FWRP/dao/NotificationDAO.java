@@ -37,10 +37,10 @@ public class NotificationDAO {
                 + " values (CURRENT_TIMESTAMP(),?,?,?,?)";
         try (Connection con = DBConnection.getConnection(context);
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, notification.getInventory().getStatus());
-            pstmt.setInt(2, NotificationStatus.to(NotificationStatus.Unread));
+            pstmt.setInt(1, notification.getType());
+            pstmt.setInt(2, notification.getStatus());
             pstmt.setInt(3, notification.getUserId());
-            pstmt.setInt(4, notification.getInventory().getId());
+            pstmt.setInt(4, notification.getInventoryId());
             try {
                 pstmt.executeUpdate();
             } catch (SQLException e) {
@@ -82,14 +82,14 @@ public class NotificationDAO {
                     alert.setStatus(rs.getInt(4));
                     alert.setUserId(rs.getInt(5));
                     inv.setId(rs.getInt(6));
-                    alert.setInventory(inv);
+                    alert.setInventoryId(rs.getInt(6));
                     
-                    inv.setRetailer(retailer);
+                    inv.setRetailerId(rs.getInt(13));
                     inv.setQuantity(rs.getInt(8));
                     inv.setExpiration(rs.getDate(9));
                     inv.setStatus(rs.getInt(10));
                     inv.setDiscountedPrice(rs.getBigDecimal(11));
-                    inv.setFoodItem(fi);
+                    inv.setFoodItemId(rs.getInt(12));
 
                     fi.setId(rs.getInt(12));
                     retailer.setUserId(rs.getInt(13));
@@ -124,7 +124,7 @@ public class NotificationDAO {
             pstmt.setInt(2, notification.getType());
             pstmt.setInt(3, notification.getStatus());
             pstmt.setInt(4, notification.getUserId());
-            pstmt.setInt(5, notification.getInventory().getId());
+            pstmt.setInt(5, notification.getInventoryId());
             try {
                 boolean succeeded = pstmt.executeUpdate() > 0;
                 if (succeeded) {

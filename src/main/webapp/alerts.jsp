@@ -55,12 +55,15 @@
                 user.setId(userId);
                 NotificationDAO notifyDAO = new NotificationDAO(context);
                 LocationDAO locDAO = new LocationDAO(context);
+                InventoryDAO invDAO = new InventoryDAO(context);
+                FoodItemDAO foodDAO = new FoodItemDAO(context);
+                RetailerDAO retailerDAO = new RetailerDAO(context);
                 // Get the current time
                 LocalDate now = LocalDate.now();
                 int i = 0;
                 for (NotificationDTO alert : notifyDAO.getNotificationsForUser(user)) {
                     i++;
-                    InventoryDTO inv = alert.getInventory();
+                    InventoryDTO inv = invDAO.retrieve(alert.getInventoryId());
                     String w;
                     String _w;
                     switch (AlertStatus.from(alert.getStatus())) {
@@ -75,7 +78,8 @@
                     out.println("<tr>");
 
                     out.println("<td>"+w+ alert.getTimestamp() +_w+"</td>");
-                    out.println("<td>"+w+ inv.getFoodItem().getName() +_w+"</td>");
+                    FoodItemDTO foodItem = foodDAO.retrieve(inv.getFoodItemId());
+                    out.println("<td>"+w+ foodItem.getName() +_w+"</td>");
                     out.println("<td>"+w+ inv.getQuantity() +_w+"</td>");
                     LocalDate expDate = inv.getExpiration().toLocalDate();
                     // Calculate the difference in days
@@ -84,8 +88,9 @@
                     if (userType == UserType.Consumer) {
                        out.println("<td>"+w+ inv.getDiscountedPrice()+_w+"</td>");
                     }
-                    LocationDTO location = locDAO.retrieve(inv.getRetailer().getLocationId());
-                    out.println("<td>"+w+inv.getRetailer().getName()+_w+"</td>");
+                    RetailerDTO retailer = retailerDAO.retrieve(inv.getRetailerId());
+                    LocationDTO location = locDAO.retrieve(retailer.getLocationId());
+                    out.println("<td>"+w+retailer.getName()+_w+"</td>");
                     out.println("<td>"+w+location.getName()+_w+"</td>");
                     out.println("<td><form id=\"readFrm"+i+"\" action=\"ReadAlert\" method=\"POST\">");
                     out.println("<input type=\"hidden\" name=\"id\" value=\"" + alert.getId()+"\"></input>");

@@ -57,8 +57,8 @@ public class AddInv extends HttpServlet {
                 FormParser.parseExpiry(request.getParameter("expiration")),
                 Integer.parseInt(request.getParameter("status")),
                 FormParser.parseNullablePrice(request.getParameter("discountPrice")),
-                fiDTO,
-                retailer);
+                fiDTO.getId(),
+                userId.intValue());
 
         InventoryDAO invDAO = new InventoryDAO(context);
         invDAO.addInventoryFood(invDTO);
@@ -70,8 +70,6 @@ public class AddInv extends HttpServlet {
     }
 
     private FoodItemDTO getFoodItemDTO(String foodName) {
-        FoodItemDTO fiDTO = new FoodItemDTO();
-        fiDTO.setName(foodName);
-        return new FoodItemDAO(context).getOrCreate(fiDTO);
+        return new FoodItemDAO(context).getOrCreate(foodName);
     }
 }
