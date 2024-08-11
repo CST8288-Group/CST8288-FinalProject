@@ -37,7 +37,11 @@ public class TransactionsDAO {
     public ArrayList<TransactionDTO> getTransactionsForUser(UserDTO user) {
         ArrayList<TransactionDTO> result = new ArrayList<>();
         String sql =
-                  " SELECT T.*, FI.*, I.*, L.*, R.* \n" +
+                  " SELECT " + TransactionDTO.getTemplatedSelectStatement("T") +
+                    ", " + FoodItemDTO.getTemplatedSelectStatement("FI") +
+                    ", " + InventoryDTO.getTemplatedSelectStatement("I") +
+                    ", " + LocationDTO.getTemplatedSelectStatement("L") +
+                    ", " + RetailerDTO.getTemplatedSelectStatement("R") + "\n" +
                     "FROM Transaction T \n" +
                     "JOIN Inventory I ON T.inventoryId = I.id \n" +
                     "JOIN FoodItem FI ON I.foodItemId = FI.id \n" +
@@ -51,41 +55,30 @@ public class TransactionsDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     // Create DTO and populate it
-                    TransactionDTO tx = new TransactionDTO();
-                    InventoryDTO inv = new InventoryDTO();
-                    FoodItemDTO fi = new FoodItemDTO();
-                    LocationDTO loc = new LocationDTO();
-                    RetailerDTO retailer = new RetailerDTO();
 
-                    tx.setId(rs.getInt(1));
-                    tx.setType(rs.getInt(2));
-                    tx.setQuantity(rs.getInt(3));
-                    tx.setLastUpdate(rs.getTimestamp(4));
-                    tx.setPrice(rs.getBigDecimal(5));
-                    tx.setStatus(rs.getInt(6));
-                    tx.setDatePlaced(rs.getTimestamp(7));
-                    tx.setUserId(rs.getInt(8));
-                    
-                    fi.setId(rs.getInt(10));
-                    fi.setName(rs.getString(11));
-                    
-                    inv.setId(rs.getInt(12));
-                    inv.setQuantity(rs.getInt(13));
-                    inv.setExpiration(rs.getDate(14));
-                    inv.setStatus(rs.getInt(15));
-                    inv.setDiscountedPrice(rs.getBigDecimal(16));
-                    inv.setFoodItem(fi);
-                    tx.setInventory(inv);
-                    
-                    retailer.setUserId(rs.getInt(18));
-                    inv.setRetailer(retailer);
-                    
-                    loc.setId(rs.getInt(19));
-                    loc.setName(rs.getString(20));                    
-                    
-                    retailer.setUserId(rs.getInt(21));
-                    retailer.setLocation(loc);
-                    retailer.setName(rs.getString(23));
+                    LocationDTO loc = new LocationDTO(rs.getInt("L.id"), rs.getString("L.name"));
+
+                    RetailerDTO retailer = new RetailerDTO(rs.getString("R.name"), loc.getId(), rs.getInt("R.userId"));
+
+                    FoodItemDTO fi = new FoodItemDTO(rs.getInt("FI.id"), rs.getString("FI.Name"));
+
+                    InventoryDTO inv = new InventoryDTO(rs.getInt("I.id"),
+                            rs.getInt("I.quantity"),
+                            rs.getDate("I.expiration"),
+                            rs.getInt("I.status"),
+                            rs.getBigDecimal("I.discountedPrice"),
+                            fi,
+                            retailer);
+
+                    TransactionDTO tx = new TransactionDTO(rs.getInt("T.id"),
+                            rs.getInt("T.type"),
+                            rs.getInt("T.quantity"),
+                            rs.getTimestamp("T.lastUpdate"),
+                            rs.getBigDecimal("T.price"),
+                            rs.getInt("T.status"),
+                            rs.getTimestamp("T.datePlaced"),
+                            rs.getInt("T.userId"),
+                            inv);
 
                     // Add it to results list
                     result.add(tx);

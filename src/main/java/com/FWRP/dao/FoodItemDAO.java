@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import java.util.ArrayList;
 
 /**
  *
@@ -58,4 +59,46 @@ public class FoodItemDAO {
         return null;
     }
 
+    public ArrayList<FoodItemDTO> getAllFoodItems() {
+        String sql = "SELECT id, name FROM FoodItem ORDER BY name DESC;";
+        try (Connection con = DBConnection.getConnection(context);
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            try (ResultSet rs = pstmt.executeQuery()) {
+                ArrayList<FoodItemDTO> result = new ArrayList<>();
+                while (rs.next()) {
+                    FoodItemDTO foodItem = new FoodItemDTO(rs.getInt("id"),
+                            rs.getString("name"));
+                    result.add(foodItem);
+                }
+                logAndClearSQLWarnings("FoodItemDAO", con);
+                return result;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            // Log and clear any warnings
+            logAndClearSQLWarnings("FoodItemDAO",con);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public FoodItemDTO retrieve(int id) {
+        String sql = "SELECT name FROM FoodItem WHERE id = ?";
+        try (Connection con = DBConnection.getConnection(context);
+             PreparedStatement statement = con.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                FoodItemDTO foodItem = new FoodItemDTO();
+                foodItem.setName(resultSet.getString("name"));
+                return foodItem;
+            }
+            // Log and clear any warnings
+            logAndClearSQLWarnings("LocationDAO",con);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

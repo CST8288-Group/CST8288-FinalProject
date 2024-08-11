@@ -10,10 +10,35 @@ package com.FWRP.dto;
  * @author walter
  */
 public class FoodItemDTO {
-private String name;
-private int id;
+    private static final String SELECT_ALL_FOOD_ITEM_FIELDS_TEMPLATE = "%1$s.id, %1$s.Name";
+    private String name;
+    private int id;
+
     /**
-     * @return the name
+     * Empty Object initialization
+     */
+    public FoodItemDTO() {}
+
+    /**
+     * Query or Creation DTO initialization, for when ID is unknown, especially from user input
+     * @param name unique human-readable name of the food article
+     */
+    public FoodItemDTO(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Result from database as a complete obj, with unique row id
+     * @param id row primary key
+     * @param name unique human-readable name of the food article
+     */
+    public FoodItemDTO(int id, String name) {
+        this.name = name;
+        this.id = id;
+    }
+
+    /**
+     * @return name
      */
     public String getName() {
         return name;
@@ -38,5 +63,9 @@ private int id;
      */
     public void setId(int id) {
         this.id = id;
+    }
+
+    public static String getTemplatedSelectStatement(String transactionVarName) {
+        return String.format(SELECT_ALL_FOOD_ITEM_FIELDS_TEMPLATE, transactionVarName);
     }
 }

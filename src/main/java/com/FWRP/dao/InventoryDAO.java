@@ -1,11 +1,13 @@
 
 package com.FWRP.dao;
 
+import com.FWRP.controller.AlertStatus;
 import static com.FWRP.dao.DAOHelper.logAndClearSQLWarnings;
 import com.FWRP.dto.UserDTO;
 import com.FWRP.dto.InventoryDTO;
 import com.FWRP.dto.FoodItemDTO;
 import com.FWRP.controller.InventoryStatus;
+import com.FWRP.controller.UserType;
 import com.FWRP.dto.NotificationDTO;
 import com.FWRP.dto.RetailerDTO;
 import com.FWRP.utils.DBConnection;
@@ -218,16 +220,32 @@ public class InventoryDAO {
         return result;
     }
     
-    void doNotifications(InventoryDTO inv) {
+    private void doNotifications(InventoryDTO inv) {
         String sql = "SELECT S.userId "
-                + "FROM Subscription S, Retailer R, PreferedFood PF "
-                + "WHERE R.userId = ? AND R.locationId = S.locationId "
-                + "AND PF.foodItemId = ?;";
+                + "FROM PreferredFood PF "
+                + "JOIN users U ON U.id = PF.userId "
+                + "JOIN Subscription S ON S.userId = PF.userId "
+                + "JOIN Retailer R ON S.locationId = R.locationId "
+                + "WHERE PF.foodItemId = ? AND U.type = ? AND R.userId = ?;";
+        UserType type;
+        switch (InventoryStatus.from(inv.getStatus())) {
+            case Discounted:
+                // for consumers
+                type = UserType.Consumer;
+                break;
+            case Donation:
+                // for charities
+                type = UserType.Charity;
+                break;
+            default:
+                return;
+        }
         try (Connection con = DBConnection.getConnection(context);
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            
-            pstmt.setInt(1, inv.getRetailer().getUserId());
-            pstmt.setInt(2, inv.getFoodItem().getId());
+
+            pstmt.setInt(1, inv.getFoodItem().getId());
+            pstmt.setInt(2, UserType.to(type));
+            pstmt.setInt(3, inv.getRetailer().getUserId());
             NotificationDAO alertDao = new NotificationDAO(context);
 
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -237,6 +255,7 @@ public class InventoryDAO {
                     
                     alert.setInventory(inv);
                     alert.setUserId(rs.getInt(1));
+                    alert.setStatus(AlertStatus.to(AlertStatus.Unread));
                     alertDao.newNotification(alert);
                 }
                 // Log and clear any warnings

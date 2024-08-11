@@ -10,8 +10,18 @@ package com.FWRP.dto;
  * @author walter
  */
 public class LocationDTO {
+
+    private static final String SELECT_ALL_LOCATION_FIELDS_TEMPLATE = "%1$s.id, %1$s.name";
+
     private int id;
     private String name;
+
+    public LocationDTO(){}
+
+    public LocationDTO(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     /**
      * @return the id
@@ -39,5 +49,9 @@ public class LocationDTO {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    public static String getTemplatedSelectStatement(String transactionVarName) {
+        return String.format(SELECT_ALL_LOCATION_FIELDS_TEMPLATE, transactionVarName);
     }
 }

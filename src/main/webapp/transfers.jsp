@@ -47,8 +47,9 @@
                 UserDTO user = new UserDTO();
                 Long userId = (Long)session.getAttribute("userId");
                 user.setId(userId);
-                TransactionsDAO dao = new TransactionsDAO(context);
-                for (TransactionDTO tx : dao.getTransactionsForUser(user)) {
+                TransactionsDAO txDAO = new TransactionsDAO(context);
+                LocationDAO locDAO = new LocationDAO(context);
+                for (TransactionDTO tx : txDAO.getTransactionsForUser(user)) {
                     out.println("<tr>");
                     out.println("<td>"+ tx.getInventory().getFoodItem().getName()+"</td>");
                     out.println("<td>"+ tx.getQuantity() +"</td>");
@@ -57,8 +58,9 @@
                         out.println("<td>"+ tx.getPrice() +"</td>");
                     }
                     out.println("<td>"+ tx.getDatePlaced() +"</td>");
+                    LocationDTO location = locDAO.retrieve(tx.getInventory().getRetailer().getLocationId());
                     out.println("<td>"+ tx.getInventory().getRetailer().getName() +"</td>");
-                    out.println("<td>"+ tx.getInventory().getRetailer().getLocation().getName() +"</td>");
+                    out.println("<td>"+ location.getName() +"</td>");
                     out.println("</tr>");
                 }
             %>

@@ -38,10 +38,11 @@
                 Long userId = (Long)session.getAttribute("userId");
                 user.setId(userId);
                 RetailerDAO retailerDao = new RetailerDAO(context);
-                LocationDAO locationDao = new LocationDAO(context);
+                LocationDAO locDAO = new LocationDAO(context);
                 RetailerDTO retailerDto = new RetailerDTO();
                 retailerDto.setUserId(userId.intValue());
-                retailerDao.getOrCreate(retailerDto);
+                retailerDao.retrieve(retailerDto);
+                LocationDTO location = locDAO.retrieve(retailerDto.getLocationId());
                 out.print("<input type=\"text\" id=\"name\" name=\"retailerName\"");
                 out.println(" value=\""+retailerDto.getName()+"\" required>");
             %>
@@ -49,7 +50,7 @@
             <label for="location">Location </label>
             <%
                 out.print("<input type=\"text\" id=\"location\" name=\"location\"");
-                out.println(" value=\""+retailerDto.getLocation().getName()+"\" required>");
+                out.println(" value=\""+location.getName()+"\" required>");
             %>
             <br>
             <input type="submit" value="Submit">

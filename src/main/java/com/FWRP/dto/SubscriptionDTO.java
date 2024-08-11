@@ -11,7 +11,15 @@ package com.FWRP.dto;
 public class SubscriptionDTO {
     private int id;
     private int userid;
-    private int locationid;
+    private LocationDTO location;
+
+    public SubscriptionDTO() {}
+
+    public SubscriptionDTO(int id, int userid, LocationDTO location) {
+        this.id = id;
+        this.userid = userid;
+        this.location = location;
+    }
 
     /**
      * @return the id
@@ -44,15 +52,15 @@ public class SubscriptionDTO {
     /**
      * @return the locationid
      */
-    public int getLocationid() {
-        return locationid;
+    public LocationDTO getLocation() {
+        return location;
     }
 
     /**
-     * @param locationid the locationid to set
+     * @param location the locationdto to set
      */
-    public void setLocationid(int locationid) {
-        this.locationid = locationid;
+    public void setLocation(LocationDTO location) {
+        this.location = location;
     }
     
     

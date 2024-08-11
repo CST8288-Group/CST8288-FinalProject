@@ -1,9 +1,12 @@
 package com.FWRP.servlet;
 
 import com.FWRP.controller.UserType;
-import com.FWRP.dao.InventoryDAO;
-import com.FWRP.dto.InventoryDTO;
+import com.FWRP.dao.SubscriptionDAO;
+
 import java.io.IOException;
+
+import com.FWRP.dto.LocationDTO;
+import com.FWRP.dto.SubscriptionDTO;
 import com.FWRP.dto.UserDTO;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -13,8 +16,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/DeleteInv")
-public class DeleteInv extends HttpServlet {
+/**
+ *
+ * @author walter
+ */
+@WebServlet("/DeleteSubscription")
+public class DeleteSubscription extends HttpServlet {
 
     private ServletContext context;
 
@@ -28,25 +35,30 @@ public class DeleteInv extends HttpServlet {
             throws ServletException, IOException {
         UserDTO userDTO = new UserDTO();
         HttpSession session = request.getSession();
-        
+
         if (session == null
-            || session.getAttribute("username") == null
-            || session.getAttribute("userId") == null) {
+                || session.getAttribute("username") == null
+                || session.getAttribute("userId") == null) {
             response.sendRedirect("login.jsp");
             return;
         }
-        if (session.getAttribute("userType") != UserType.Retailer) {
+        UserType userType = (UserType) session.getAttribute("userType");
+        if (userType != UserType.Consumer && userType != UserType.Charity) {
             response.sendRedirect("home.jsp");
         }
         Long userId = (Long)session.getAttribute("userId");
-        userDTO.setId(userId);
 
-        String itemid = request.getParameter("id");
-        InventoryDTO invDTO = new InventoryDTO();
-        invDTO.setId(Integer.parseInt(itemid));
-        
-        InventoryDAO invDAO = new InventoryDAO(context);
-        invDAO.deleteInventory(invDTO);
-        response.sendRedirect("inventory.jsp");
+        int subscriptionId = Integer.parseInt(request.getParameter("id"));
+        int locationId = Integer.parseInt(request.getParameter("locationId"));
+
+        LocationDTO locDTO = new LocationDTO();
+        locDTO.setId(locationId);
+
+
+        SubscriptionDTO subDTO = new SubscriptionDTO(subscriptionId, userId.intValue(), locDTO);
+
+        SubscriptionDAO subDAO = new SubscriptionDAO(context);
+        subDAO.deleteSubscription(subDTO);
+        response.sendRedirect("preferences.jsp");
     }
 }

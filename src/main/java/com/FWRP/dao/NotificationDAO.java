@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Tiantian
+ * @author Tiantian, walter
  */
 public class NotificationDAO {
     private ServletContext context;
@@ -54,7 +54,7 @@ public class NotificationDAO {
        }
     }
     
-        public ArrayList<NotificationDTO> getNotificationsForUser(UserDTO user) {
+    public ArrayList<NotificationDTO> getNotificationsForUser(UserDTO user) {
         ArrayList<NotificationDTO> result = new ArrayList<>();
         String sql =
                   "SELECT N.*, I.*, FI.name, L.*, R.name "
@@ -99,7 +99,7 @@ public class NotificationDAO {
                     loc.setId(rs.getInt(15));
                     loc.setName(rs.getString(16));                    
                     
-                    retailer.setLocation(loc);
+                    retailer.setLocationId(loc.getId());
                     retailer.setName(rs.getString(17));
 
                     // Add it to results list
@@ -145,17 +145,14 @@ public class NotificationDAO {
     }
     
     public void updateNotification(NotificationDTO notification) {
-        String sql = "UPDATE Notification SET timestamp = ?,"
-                + " type = ?, status = ?, userId = ?,"
-                + " inventoryId = ? WHERE id = ? ";
+        String sql = "UPDATE Notification SET status = ? "
+                + " WHERE id = ? AND userId = ?";
         try (Connection con = DBConnection.getConnection(context);
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setTimestamp(1, notification.getTimestamp());
-            pstmt.setInt(2, notification.getType());
-            pstmt.setInt(3, notification.getStatus());
-            pstmt.setInt(4, notification.getUserId());
-            pstmt.setInt(5, notification.getInventory().getId());
-            pstmt.setInt(6, notification.getId());
+            pstmt.setInt(1, notification.getStatus());
+            pstmt.setInt(2, notification.getId());
+            pstmt.setInt(3, notification.getUserId());
+            
             pstmt.executeUpdate();
             // Log and clear any warnings
             logAndClearSQLWarnings("NotificationDAO",con);
@@ -165,10 +162,11 @@ public class NotificationDAO {
     }
     
     public void deleteNotification(NotificationDTO notification) {
-         String sql = "DELETE FROM Notification WHERE id = ? ";
+        String sql = "DELETE FROM Notification WHERE id = ? AND userId = ?;";
         try (Connection con = DBConnection.getConnection(context);
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setInt(1, notification.getId());
+            pstmt.setInt(2, notification.getUserId());
             pstmt.executeUpdate();
             // Log and clear any warnings
             logAndClearSQLWarnings("NotificationDAO",con);
@@ -176,5 +174,4 @@ public class NotificationDAO {
             e.printStackTrace();
        }
     }
-    
 }
