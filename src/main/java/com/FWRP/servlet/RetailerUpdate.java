@@ -6,26 +6,19 @@
 package com.FWRP.servlet;
 
 import com.FWRP.controller.UserType;
-import com.FWRP.dao.FoodItemDAO;
-import com.FWRP.dao.InventoryDAO;
 import com.FWRP.dao.LocationDAO;
 import com.FWRP.dao.RetailerDAO;
-import com.FWRP.dto.FoodItemDTO;
-import com.FWRP.dto.InventoryDTO;
 import com.FWRP.dto.LocationDTO;
 import com.FWRP.dto.RetailerDTO;
 import com.FWRP.dto.UserDTO;
 import jakarta.servlet.ServletContext;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.math.BigDecimal;
-import java.sql.Date;
 
 /**
  *
@@ -61,15 +54,13 @@ public class RetailerUpdate extends HttpServlet {
 
         String retailerName = request.getParameter("retailerName");
         String locationName = request.getParameter("location");
-        RetailerDTO retailer = new RetailerDTO();
-        LocationDTO location = new LocationDTO();
         
+        LocationDAO locDAO = new LocationDAO(context);
+        LocationDTO location = locDAO.getOrCreate(locationName);
+        
+        RetailerDTO retailer = new RetailerDTO();
         retailer.setUserId(userId.intValue());
         retailer.setName(retailerName);
-        
-        location.setName(locationName);
-        LocationDAO locDAO = new LocationDAO(context);
-        location = locDAO.getOrCreate(location);
         retailer.setLocationId(location.getId());
         
         RetailerDAO retailerDAO = new RetailerDAO(context);

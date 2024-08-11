@@ -53,17 +53,19 @@
                 UserDTO user = new UserDTO();
                 Long userId = (Long)session.getAttribute("userId");
                 user.setId(userId);
-                InventoryDAO dao = new InventoryDAO(context);
+                FoodItemDAO foodDAO = new FoodItemDAO(context);
+                InventoryDAO invDAO = new InventoryDAO(context);
                 InventoryStatus type = userType == UserType.Charity
                                        ? InventoryStatus.Donation
                                        : InventoryStatus.Discounted;
                 int i = 0;
-                for (InventoryDTO inv : dao.getAvailableFood(type)) {
+                for (InventoryDTO inv : invDAO.getAvailableFood(type)) {
                     i++;
                     out.println("<tr>");
                     out.println("<form id=\"form"+i+"\" action=\"Transfer\" method=\"POST\">");
                     out.println("<input type=\"hidden\" name=\"id\" value=\"" + inv.getId()+"\">");
-                    out.println("<td>"+ inv.getFoodItem().getName() +"</td>");
+                    FoodItemDTO foodItem = foodDAO.retrieve(inv.getFoodItemId());
+                    out.println("<td>"+ foodItem.getName() +"</td>");
                     out.println("<td>"+ inv.getQuantity() +"</td>");
                     out.println("<td>"+ inv.getExpiration() +"</td>");
                     if (userType == UserType.Consumer) {

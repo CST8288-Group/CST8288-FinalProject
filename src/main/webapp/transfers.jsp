@@ -49,17 +49,22 @@
                 user.setId(userId);
                 TransactionsDAO txDAO = new TransactionsDAO(context);
                 LocationDAO locDAO = new LocationDAO(context);
+                RetailerDAO retDAO = new RetailerDAO(context);
+                FoodItemDAO foodDAO = new FoodItemDAO(context);
                 for (TransactionDTO tx : txDAO.getTransactionsForUser(user)) {
                     out.println("<tr>");
-                    out.println("<td>"+ tx.getInventory().getFoodItem().getName()+"</td>");
+                    
+                    FoodItemDTO foodItem = foodDAO.retrieve(tx.getInventory().getFoodItemId());
+                    out.println("<td>"+ foodItem.getName()+"</td>");
                     out.println("<td>"+ tx.getQuantity() +"</td>");
                     out.println("<td>"+ tx.getInventory().getExpiration() +"</td>");
                     if (userType==UserType.Consumer) {
                         out.println("<td>"+ tx.getPrice() +"</td>");
                     }
                     out.println("<td>"+ tx.getDatePlaced() +"</td>");
-                    LocationDTO location = locDAO.retrieve(tx.getInventory().getRetailer().getLocationId());
-                    out.println("<td>"+ tx.getInventory().getRetailer().getName() +"</td>");
+                    RetailerDTO retailer = retDAO.retrieve(tx.getInventory().getRetailerId());
+                    LocationDTO location = locDAO.retrieve(retailer.getLocationId());
+                    out.println("<td>"+ retailer.getName() +"</td>");
                     out.println("<td>"+ location.getName() +"</td>");
                     out.println("</tr>");
                 }

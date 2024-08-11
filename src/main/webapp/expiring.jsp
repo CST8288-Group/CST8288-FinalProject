@@ -45,14 +45,16 @@
                 Long userId = (Long)session.getAttribute("userId");
                 user.setId(userId);
                 InventoryDAO dao = new InventoryDAO(context);
+                FoodItemDAO foodDAO = new FoodItemDAO(context);
                 int i = 0;
                 for (InventoryDTO inv : dao.getExpiringWithin7(user)) {
                     i++;
                     out.println("<tr>");
                     out.println("<form id=\"form"+i+"\" action=\"UpdateInv\" method=\"POST\"><input type=\"hidden\""
                         + " name=\"id\" value=\"" + inv.getId()+"\" />");
+                    FoodItemDTO foodItem = foodDAO.retrieve(inv.getFoodItemId());
                     out.println("<td><input form=\"form"+i+"\" type=\"text\" "
-                    + "name=\"itemname\" value=\""+ inv.getFoodItem().getName() +"\"</td>");
+                    + "name=\"itemname\" value=\""+ foodItem.getName() +"\"</td>");
                     out.println("<td><input form=\"form"+i+"\" type=\"number\" "
                     + "name=\"quantity\" min=\"0\" value=\""+ inv.getQuantity() +"\"</td>");
                     out.println("<td><input form=\"form"+i+"\" type=\"date\" "

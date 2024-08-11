@@ -6,18 +6,12 @@
 package com.FWRP.servlet;
 
 import com.FWRP.controller.UserType;
-import com.FWRP.dao.FoodItemDAO;
-import com.FWRP.dao.InventoryDAO;
 import com.FWRP.dao.TransactionsDAO;
-import com.FWRP.dto.FoodItemDTO;
 import com.FWRP.dto.InventoryDTO;
-import com.FWRP.dto.RetailerDTO;
 import com.FWRP.dto.UserDTO;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.sql.Date;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

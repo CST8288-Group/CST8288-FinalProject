@@ -28,11 +28,13 @@ public class LocationDAO {
         this.context = context;
     }
     
-    public LocationDTO getOrCreate(LocationDTO location) {
+    public LocationDTO getOrCreate(String name) {
         String sql = "SELECT id FROM Location WHERE name = ?";
+        LocationDTO location = new LocationDTO();
+        location.setName(name);
         try (Connection con = DBConnection.getConnection(context);
              PreparedStatement statement = con.prepareStatement(sql)) {
-            statement.setString(1, location.getName());
+            statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 location.setId(resultSet.getInt("id"));
@@ -100,26 +102,6 @@ public class LocationDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        location.setName("Location not set");
-        return getOrCreate(location);
-    }
-    
-    public LocationDTO retrieve(LocationDTO location) {
-        String sql = "SELECT name FROM Location WHERE id = ?";
-        try (Connection con = DBConnection.getConnection(context);
-             PreparedStatement statement = con.prepareStatement(sql)) {
-            statement.setInt(1, location.getId());
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                location.setName(resultSet.getString("name"));
-                return location;
-            }
-            // Log and clear any warnings
-            logAndClearSQLWarnings("LocationDAO",con);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        location.setName("Location not set");
-        return getOrCreate(location);
+        return getOrCreate("Location not set");
     }
 }

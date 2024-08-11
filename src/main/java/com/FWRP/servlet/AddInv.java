@@ -45,7 +45,7 @@ public class AddInv extends HttpServlet {
         }
         Long userId = (Long)session.getAttribute("userId");
 
-        RetailerDTO retailer = getRetailedDTO(userId.intValue());
+        RetailerDTO retailer = getRetailerDTO(userId.intValue());
         if (retailer == null) {
             response.sendRedirect("login.jsp");
         }
@@ -57,23 +57,19 @@ public class AddInv extends HttpServlet {
                 FormParser.parseExpiry(request.getParameter("expiration")),
                 Integer.parseInt(request.getParameter("status")),
                 FormParser.parseNullablePrice(request.getParameter("discountPrice")),
-                fiDTO,
-                retailer);
+                fiDTO.getId(),
+                userId.intValue());
 
         InventoryDAO invDAO = new InventoryDAO(context);
         invDAO.addInventoryFood(invDTO);
         response.sendRedirect("inventory.jsp");
     }
 
-    private RetailerDTO getRetailedDTO(int userId) {
-        RetailerDTO retailer = new RetailerDTO();
-        retailer.setUserId(userId);
-        return new RetailerDAO(context).retrieve(retailer);
+    private RetailerDTO getRetailerDTO(int userId) {
+        return new RetailerDAO(context).retrieve(userId);
     }
 
     private FoodItemDTO getFoodItemDTO(String foodName) {
-        FoodItemDTO fiDTO = new FoodItemDTO();
-        fiDTO.setName(foodName);
-        return new FoodItemDAO(context).getOrCreate(fiDTO);
+        return new FoodItemDAO(context).getOrCreate(foodName);
     }
 }

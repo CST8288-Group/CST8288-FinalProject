@@ -20,20 +20,20 @@ public class InventoryDTO {
     private Date expiration;
     private int status;
     private BigDecimal discountedPrice;
-    private FoodItemDTO foodItem;
-    private RetailerDTO retailer;
+    private int foodItemId;
+    private int retailerId;
 
     public InventoryDTO(){}
 
     public InventoryDTO(int id, int quantity, Date expiration, int status, BigDecimal discountedPrice,
-                        FoodItemDTO foodItem, RetailerDTO retailer) {
+                        int foodItemId, int retailerId) {
         this.id = id;
         this.quantity = quantity;
         this.expiration = expiration;
         this.status = status;
         this.discountedPrice = discountedPrice;
-        this.foodItem = foodItem;
-        this.retailer = retailer;
+        this.foodItemId = foodItemId;
+        this.retailerId = retailerId;
     }
 
 
@@ -110,29 +110,29 @@ public class InventoryDTO {
     /**
      * @return the foodItem
      */
-    public FoodItemDTO getFoodItem() {
-        return foodItem;
+    public int getFoodItemId() {
+        return foodItemId;
     }
 
     /**
-     * @param foodItem the foodItem to set
+     * @param foodItemId the foodItemId to set
      */
-    public void setFoodItem(FoodItemDTO foodItem) {
-        this.foodItem = foodItem;
+    public void setFoodItemId(int foodItemId) {
+        this.foodItemId = foodItemId;
     }
 
     /**
      * @return the retailer
      */
-    public RetailerDTO getRetailer() {
-        return retailer;
+    public int getRetailerId() {
+        return retailerId;
     }
 
     /**
-     * @param retailer the retailer to set
+     * @param retailerId the retailerId to set
      */
-    public void setRetailer(RetailerDTO retailer) {
-        this.retailer = retailer;
+    public void setRetailerId(int retailerId) {
+        this.retailerId = retailerId;
     }
 
     public static String getTemplatedSelectStatement(String transactionVarName) {

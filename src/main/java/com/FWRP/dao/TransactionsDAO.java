@@ -58,17 +58,13 @@ public class TransactionsDAO {
 
                     LocationDTO loc = new LocationDTO(rs.getInt("L.id"), rs.getString("L.name"));
 
-                    RetailerDTO retailer = new RetailerDTO(rs.getString("R.name"), loc.getId(), rs.getInt("R.userId"));
-
-                    FoodItemDTO fi = new FoodItemDTO(rs.getInt("FI.id"), rs.getString("FI.Name"));
-
                     InventoryDTO inv = new InventoryDTO(rs.getInt("I.id"),
                             rs.getInt("I.quantity"),
                             rs.getDate("I.expiration"),
                             rs.getInt("I.status"),
                             rs.getBigDecimal("I.discountedPrice"),
-                            fi,
-                            retailer);
+                            rs.getInt("FI.id"),
+                             rs.getInt("R.userId"));
 
                     TransactionDTO tx = new TransactionDTO(rs.getInt("T.id"),
                             rs.getInt("T.type"),

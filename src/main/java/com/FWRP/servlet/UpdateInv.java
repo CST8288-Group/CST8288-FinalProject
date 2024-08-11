@@ -52,17 +52,15 @@ public class UpdateInv extends HttpServlet {
         String expiry = request.getParameter("expiration");
         String status = request.getParameter("status");
         String price = request.getParameter("price");
-        RetailerDTO retailer = new RetailerDTO();
         InventoryDTO invDTO = new InventoryDTO();
-        FoodItemDTO fiDTO = new FoodItemDTO();
         FoodItemDAO foodDao = new FoodItemDAO(context);
-        retailer.setUserId(userId.intValue());
-        fiDTO.setName(itemName);
-        foodDao.getOrCreate(fiDTO);
+  
+        FoodItemDTO fiDTO = foodDao.getOrCreate(itemName);
+        
         invDTO.setId(Integer.parseInt(itemid));
-        invDTO.setFoodItem(fiDTO);
+        invDTO.setFoodItemId(fiDTO.getId());
         invDTO.setQuantity(Integer.parseInt(quantity));
-        invDTO.setRetailer(retailer);
+        invDTO.setRetailerId(userId.intValue());
         invDTO.setStatus(Integer.parseInt(status));
         String[] yyyymmdd = expiry.split("-");
         invDTO.setExpiration(new Date(Integer.parseInt(yyyymmdd[0])-1900,

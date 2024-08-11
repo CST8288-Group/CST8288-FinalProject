@@ -39,9 +39,7 @@
                 user.setId(userId);
                 RetailerDAO retailerDao = new RetailerDAO(context);
                 LocationDAO locDAO = new LocationDAO(context);
-                RetailerDTO retailerDto = new RetailerDTO();
-                retailerDto.setUserId(userId.intValue());
-                retailerDao.retrieve(retailerDto);
+                RetailerDTO retailerDto = retailerDao.retrieve(userId.intValue());
                 LocationDTO location = locDAO.retrieve(retailerDto.getLocationId());
                 out.print("<input type=\"text\" id=\"name\" name=\"retailerName\"");
                 out.println(" value=\""+retailerDto.getName()+"\" required>");

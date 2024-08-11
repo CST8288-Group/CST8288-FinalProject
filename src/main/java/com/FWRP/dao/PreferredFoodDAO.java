@@ -5,7 +5,6 @@
 package com.FWRP.dao;
 
 import static com.FWRP.dao.DAOHelper.logAndClearSQLWarnings;
-import com.FWRP.dto.FoodItemDTO;
 import com.FWRP.dto.PreferredFoodDTO;
 import com.FWRP.dto.UserDTO;
 import com.FWRP.utils.DBConnection;
