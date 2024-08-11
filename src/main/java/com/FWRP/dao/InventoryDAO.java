@@ -40,15 +40,17 @@ public class InventoryDAO {
             pstmt.setLong(1, inventoryId);
             
             try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
+                if (rs.next()) {
                     // Create DTO and populate it
                     InventoryDTO inv = new InventoryDTO();
                     inv.setId(inventoryId);
+                    inv.setFoodItemId(rs.getInt("foodItemId"));
                     inv.setQuantity(rs.getInt("quantity"));
                     inv.setExpiration(rs.getDate("expiration"));
                     inv.setStatus(rs.getInt("status"));
                     inv.setDiscountedPrice(rs.getBigDecimal("discountedPrice"));
                     inv.setRetailerId(rs.getInt("retailerId"));
+                    return inv;
                 }
                 // Log and clear any warnings
                 logAndClearSQLWarnings("InventoryDAO",con);

@@ -94,6 +94,7 @@ public class FoodItemDAO {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 FoodItemDTO foodItem = new FoodItemDTO();
+                foodItem.setId(id);
                 foodItem.setName(resultSet.getString("name"));
                 return foodItem;
             }
