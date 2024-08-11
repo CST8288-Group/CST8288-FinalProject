@@ -8,6 +8,7 @@ package com.FWRP.servlet;
 import com.FWRP.controller.UserType;
 import com.FWRP.dao.FoodItemDAO;
 import com.FWRP.dao.InventoryDAO;
+import com.FWRP.dao.LocationDAO;
 import com.FWRP.dao.RetailerDAO;
 import com.FWRP.dto.FoodItemDTO;
 import com.FWRP.dto.InventoryDTO;
@@ -67,7 +68,9 @@ public class RetailerUpdate extends HttpServlet {
         retailer.setName(retailerName);
         
         location.setName(locationName);
-        retailer.setLocation(location);
+        LocationDAO locDAO = new LocationDAO(context);
+        location = locDAO.getOrCreate(location);
+        retailer.setLocationId(location.getId());
         
         RetailerDAO retailerDAO = new RetailerDAO(context);
         retailerDAO.update(retailer);

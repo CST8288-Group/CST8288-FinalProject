@@ -27,33 +27,58 @@ public class RetailerDAO {
         this.context = context;
     }
     
+    public RetailerDTO getByUserId(int userId) {
+        String sql = "SELECT * FROM Retailer WHERE userId = ?";
+        try (Connection con = DBConnection.getConnection(context);
+             PreparedStatement statement = con.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            
+            RetailerDTO retailer = new RetailerDTO();
+            
+            ResultSet resultSet = statement.executeQuery();
+            retailer.setName(resultSet.getString("name"));
+            if (resultSet.next()) {
+                retailer.setName(resultSet.getString("name"));
+                retailer.setLocationId(resultSet.getInt("locationId"));
+                return retailer;
+            }
+            
+            // Log and clear any warnings
+            logAndClearSQLWarnings("RetailerDAO",con);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public RetailerDTO getOrCreate(RetailerDTO retailer) {
         String sql = "SELECT * FROM Retailer WHERE userId = ?";
         try (Connection con = DBConnection.getConnection(context);
              PreparedStatement statement = con.prepareStatement(sql)) {
-            LocationDAO locationDAO = new LocationDAO(context);
-            LocationDTO location = new LocationDTO();
+
             statement.setInt(1, retailer.getUserId());
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 retailer.setName(resultSet.getString("name"));
-                location.setId(resultSet.getInt("locationId"));
-                locationDAO.retrieve(location);
-                retailer.setLocation(location);
+                retailer.setLocationId(resultSet.getInt("locationId"));
                 return retailer;
             }
             
+            LocationDAO locationDAO = new LocationDAO(context);
+            LocationDTO location = new LocationDTO();
+            location.setId(-1);
+            location.setName("Location not set");
+            location = locationDAO.getOrCreate(location);
+            retailer.setLocationId(location.getId());
+            
             String sql2 = "INSERT INTO Retailer (userId,name,locationId) "
                     + "VALUES (?,?,?)";
-            try (PreparedStatement statement2 = con.prepareStatement(sql2,RETURN_GENERATED_KEYS)) {
-                location.setId(-1);
-                location.setName("Location not set");
-                locationDAO.getOrCreate(location);
+            try (Connection con2 = DBConnection.getConnection(context);
+                 PreparedStatement statement2 = con2.prepareStatement(sql2,RETURN_GENERATED_KEYS)) {
+
                 retailer.setName("Name not set");
-                retailer.setLocation(location);
                 statement2.setInt(1, retailer.getUserId());
                 statement2.setString(2, retailer.getName());
-                statement2.setInt(3, location.getId());
+                statement2.setInt(3, retailer.getLocationId());
                 
                 boolean succeeded = statement2.executeUpdate() > 0;
 
@@ -65,47 +90,43 @@ public class RetailerDAO {
                 }
             }
             // Log and clear any warnings
-            logAndClearSQLWarnings("LocationDAO",con);
+            logAndClearSQLWarnings("RetailerDAO",con);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return retailer;
     }
+
     public RetailerDTO retrieve(RetailerDTO retailer) {
-        String sql = "SELECT name FROM Location WHERE id = ?";
+        String sql = "SELECT name, locationId FROM Retailer WHERE userId = ?";
         try (Connection con = DBConnection.getConnection(context);
              PreparedStatement statement = con.prepareStatement(sql)) {
             statement.setInt(1, retailer.getUserId());
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                LocationDAO locationDAO = new LocationDAO(context);
-                LocationDTO location = new LocationDTO();
                 retailer.setName(resultSet.getString("name"));
-                resultSet.getString("name");
-                location.setId(resultSet.getInt("locationId"));
-                locationDAO.retrieve(location);
-                retailer.setLocation(location);
+                retailer.setLocationId(resultSet.getInt("locationId"));
                 return retailer;
             }
             // Log and clear any warnings
-            logAndClearSQLWarnings("LocationDAO",con);
+            logAndClearSQLWarnings("RetailerDAO",con);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return retailer;
+        retailer.setName("Name not set");
+        return getOrCreate(retailer);
     }
+
     public RetailerDTO update(RetailerDTO retailer) {
         String sql = "UPDATE Retailer SET name = ?, locationId = ? WHERE userId = ?";
-        LocationDAO locationDAO = new LocationDAO(context);
-        locationDAO.getOrCreate(retailer.getLocation());
         try (Connection con = DBConnection.getConnection(context);
              PreparedStatement statement = con.prepareStatement(sql)) {
             statement.setString(1, retailer.getName());
-            statement.setInt(2, retailer.getLocation().getId());
+            statement.setInt(2, retailer.getLocationId());
             statement.setInt(3, retailer.getUserId());
             statement.executeUpdate();
             // Log and clear any warnings
-            logAndClearSQLWarnings("LocationDAO",con);
+            logAndClearSQLWarnings("RetailerDAO",con);
         } catch (SQLException e) {
             e.printStackTrace();
         }

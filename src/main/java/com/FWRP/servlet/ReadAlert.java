@@ -1,10 +1,9 @@
 package com.FWRP.servlet;
 
+import com.FWRP.controller.AlertStatus;
 import com.FWRP.controller.UserType;
-import com.FWRP.dao.InventoryDAO;
-import com.FWRP.dto.InventoryDTO;
-import java.io.IOException;
-import com.FWRP.dto.UserDTO;
+import com.FWRP.dao.NotificationDAO;
+import com.FWRP.dto.NotificationDTO;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,8 +12,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/DeleteInv")
-public class DeleteInv extends HttpServlet {
+import java.io.IOException;
+
+@WebServlet("/ReadAlert")
+public class ReadAlert extends HttpServlet {
 
     private ServletContext context;
 
@@ -26,7 +27,6 @@ public class DeleteInv extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        UserDTO userDTO = new UserDTO();
         HttpSession session = request.getSession();
         
         if (session == null
@@ -35,18 +35,18 @@ public class DeleteInv extends HttpServlet {
             response.sendRedirect("login.jsp");
             return;
         }
-        if (session.getAttribute("userType") != UserType.Retailer) {
+        if (session.getAttribute("userType") == UserType.Retailer) {
             response.sendRedirect("home.jsp");
+            return;
         }
-        Long userId = (Long)session.getAttribute("userId");
-        userDTO.setId(userId);
-
-        String itemid = request.getParameter("id");
-        InventoryDTO invDTO = new InventoryDTO();
-        invDTO.setId(Integer.parseInt(itemid));
-        
-        InventoryDAO invDAO = new InventoryDAO(context);
-        invDAO.deleteInventory(invDTO);
-        response.sendRedirect("inventory.jsp");
+        int userId = ((Long)session.getAttribute("userId")).intValue();
+        int notificationId = Integer.parseInt(request.getParameter("id"));
+        NotificationDTO notification = new NotificationDTO();
+        notification.setId(notificationId);
+        notification.setUserId(userId);
+        notification.setStatus(AlertStatus.to(AlertStatus.Read));
+        NotificationDAO notDao = new NotificationDAO(context);
+        notDao.updateNotification(notification);
+        response.sendRedirect("alerts.jsp");
     }
 }

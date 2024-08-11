@@ -79,7 +79,6 @@
                         out.print("Purchase");
                     }
                     out.println("\"></td></form>");
-                    out.println("<td></td>");
                     out.println("</tr>");
                 }
             %>

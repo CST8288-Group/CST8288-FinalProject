@@ -14,14 +14,14 @@ public class RetailerDTO {
     private static final String SELECT_ALL_RETAILER_FIELDS_TEMPLATE = "%1$s.userId, %1$s.name, %1$s.locationId";
 
     private String name;
-    private LocationDTO location;
+    private int locationId;
     private int userId;
 
     public RetailerDTO(){}
 
-    public RetailerDTO(String name, LocationDTO location, int userId) {
+    public RetailerDTO(String name, int locationId, int userId) {
         this.name = name;
-        this.location = location;
+        this.locationId = locationId;
         this.userId = userId;
     }
 
@@ -40,17 +40,17 @@ public class RetailerDTO {
     }
 
     /**
-     * @return the location
+     * @return the locationId
      */
-    public LocationDTO getLocation() {
-        return location;
+    public int getLocationId() {
+        return locationId;
     }
 
     /**
-     * @param location the location to set
+     * @param locationId the locationId to set
      */
-    public void setLocation(LocationDTO location) {
-        this.location = location;
+    public void setLocationId(int locationId) {
+        this.locationId = locationId;
     }
 
     /**

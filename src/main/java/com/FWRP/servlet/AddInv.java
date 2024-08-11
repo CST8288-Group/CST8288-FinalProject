@@ -3,12 +3,13 @@ package com.FWRP.servlet;
 import com.FWRP.controller.UserType;
 import com.FWRP.dao.FoodItemDAO;
 import com.FWRP.dao.InventoryDAO;
+import com.FWRP.dao.RetailerDAO;
 import com.FWRP.dto.FoodItemDTO;
 import com.FWRP.dto.InventoryDTO;
 import com.FWRP.dto.RetailerDTO;
 import java.io.IOException;
-import java.sql.Date;
 import com.FWRP.dto.UserDTO;
+import com.FWRP.utils.FormParser;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,7 +17,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.math.BigDecimal;
 
 @WebServlet("/addItem")
 public class AddInv extends HttpServlet {
@@ -44,36 +44,36 @@ public class AddInv extends HttpServlet {
             response.sendRedirect("home.jsp");
         }
         Long userId = (Long)session.getAttribute("userId");
-        userDTO.setId(userId);
 
-        String itemName = request.getParameter("itemname");
-        String quantity = request.getParameter("quantity");
-        String expiry = request.getParameter("expiration");
-        String status = request.getParameter("status");
-        String price = request.getParameter("discountPrice");
-        InventoryDTO invDTO = new InventoryDTO();
-        FoodItemDTO fiDTO = new FoodItemDTO();
-        RetailerDTO retailer = new RetailerDTO();
-        FoodItemDAO foodDao = new FoodItemDAO(context);
-        retailer.setUserId(userId.intValue());
-        fiDTO.setName(itemName);
-        foodDao.getOrCreate(fiDTO);
-        invDTO.setId(-1);
-        invDTO.setFoodItem(fiDTO);
-        invDTO.setQuantity(Integer.parseInt(quantity));
-        invDTO.setRetailer(retailer);
-        invDTO.setStatus(Integer.parseInt(status));
-        String[] yyyymmdd = expiry.split("-");
-        invDTO.setExpiration(new Date(Integer.parseInt(yyyymmdd[0])-1900,
-                Integer.parseInt(yyyymmdd[1])-1,
-                Integer.parseInt(yyyymmdd[2])));
-        if (price != null && !price.isEmpty() && !price.isBlank()) {
-            invDTO.setDiscountedPrice(new BigDecimal(price));
-        } else {
-            invDTO.setDiscountedPrice(null);
+        RetailerDTO retailer = getRetailedDTO(userId.intValue());
+        if (retailer == null) {
+            response.sendRedirect("login.jsp");
         }
+
+        FoodItemDTO fiDTO = getFoodItemDTO(request.getParameter("itemname"));
+
+        InventoryDTO invDTO = new InventoryDTO(-1,
+                Integer.parseInt(request.getParameter("quantity")),
+                FormParser.parseExpiry(request.getParameter("expiration")),
+                Integer.parseInt(request.getParameter("status")),
+                FormParser.parseNullablePrice(request.getParameter("discountPrice")),
+                fiDTO,
+                retailer);
+
         InventoryDAO invDAO = new InventoryDAO(context);
         invDAO.addInventoryFood(invDTO);
         response.sendRedirect("inventory.jsp");
+    }
+
+    private RetailerDTO getRetailedDTO(int userId) {
+        RetailerDTO retailer = new RetailerDTO();
+        retailer.setUserId(userId);
+        return new RetailerDAO(context).retrieve(retailer);
+    }
+
+    private FoodItemDTO getFoodItemDTO(String foodName) {
+        FoodItemDTO fiDTO = new FoodItemDTO();
+        fiDTO.setName(foodName);
+        return new FoodItemDAO(context).getOrCreate(fiDTO);
     }
 }

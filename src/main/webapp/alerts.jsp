@@ -30,7 +30,7 @@
         <nav>
             <a href="home.jsp">home</a>
         </nav>
-        <h2><%= session.getAttribute("username") %>'s alerts</h2>
+        <h2>Alerts</h2>
         <table>
             <tr>
                 <th>Alert Time</th>
@@ -53,31 +53,44 @@
                 UserDTO user = new UserDTO();
                 Long userId = (Long)session.getAttribute("userId");
                 user.setId(userId);
-                NotificationDAO dao = new NotificationDAO(context);
+                NotificationDAO notifyDAO = new NotificationDAO(context);
+                LocationDAO locDAO = new LocationDAO(context);
                 // Get the current time
                 LocalDate now = LocalDate.now();
                 int i = 0;
-                for (NotificationDTO alert : dao.getNotificationsForUser(user)) {
+                for (NotificationDTO alert : notifyDAO.getNotificationsForUser(user)) {
                     i++;
                     InventoryDTO inv = alert.getInventory();
+                    String w;
+                    String _w;
+                    switch (AlertStatus.from(alert.getStatus())) {
+                    case Unread:
+                        w="<b>";
+                        _w="</b>";
+                        break;
+                    default:
+                        w="";
+                        _w="";
+                    }
                     out.println("<tr>");
 
-                    out.println("<td>"+ alert.getTimestamp() +"</td>");
-                    out.println("<td>"+ inv.getFoodItem().getName() +"</td>");
-                    out.println("<td>"+ inv.getQuantity() +"</td>");
+                    out.println("<td>"+w+ alert.getTimestamp() +_w+"</td>");
+                    out.println("<td>"+w+ inv.getFoodItem().getName() +_w+"</td>");
+                    out.println("<td>"+w+ inv.getQuantity() +_w+"</td>");
                     LocalDate expDate = inv.getExpiration().toLocalDate();
                     // Calculate the difference in days
                     long daysBetween = ChronoUnit.DAYS.between(now, expDate);
-                    out.println("<td>"+ daysBetween +"</td>");
+                    out.println("<td>"+w+ daysBetween +_w+"</td>");
                     if (userType == UserType.Consumer) {
-                       out.println("<td>"+ inv.getDiscountedPrice()+"</td>");
+                       out.println("<td>"+w+ inv.getDiscountedPrice()+_w+"</td>");
                     }
-                    out.println("<td>"+inv.getRetailer().getName()+"</td>");
-                    out.println("<td>"+inv.getRetailer().getLocation().getName()+"</td>");
+                    LocationDTO location = locDAO.retrieve(inv.getRetailer().getLocationId());
+                    out.println("<td>"+w+inv.getRetailer().getName()+_w+"</td>");
+                    out.println("<td>"+w+location.getName()+_w+"</td>");
                     out.println("<td><form id=\"readFrm"+i+"\" action=\"ReadAlert\" method=\"POST\">");
                     out.println("<input type=\"hidden\" name=\"id\" value=\"" + alert.getId()+"\"></input>");
                     out.print("<input type=\"submit\" value=\"Mark Read\"></form></td>");
-                    out.println("<td><form id=\"clearFrm"+i+"\" action=\"ClearAlert\" method=\"POST\">");
+                    out.println("<td><form id=\"clearFrm"+i+"\" action=\"DeleteAlert\" method=\"POST\">");
                     out.println("<input type=\"hidden\" name=\"id\" value=\"" + alert.getId()+"\"></input>");
                     out.print("<input type=\"submit\" value=\"Clear\"></form></td>");
                     out.println("</tr>");

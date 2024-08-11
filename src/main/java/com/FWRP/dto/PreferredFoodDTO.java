@@ -10,9 +10,15 @@ package com.FWRP.dto;
  */
 public class PreferredFoodDTO {
     private int id;
-    private int userid;
-    private int fooditemid;
+    private int userId;
+    private int foodItemId;
 
+    public PreferredFoodDTO(int id, int userId, int foodItemId) {
+        this.id = id;
+        this.userId = userId;
+        this.foodItemId = foodItemId;
+    }
+    
     /**
      * @return the id
      */
@@ -28,31 +34,31 @@ public class PreferredFoodDTO {
     }
 
     /**
-     * @return the userid
+     * @return the userId
      */
-    public int getUserid() {
-        return userid;
+    public int getUserId() {
+        return userId;
     }
 
     /**
-     * @param userid the userid to set
+     * @param userId the userId to set
      */
-    public void setUserid(int userid) {
-        this.userid = userid;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     /**
-     * @return the fooditemid
+     * @return the foodItemId
      */
-    public int getFooditemid() {
-        return fooditemid;
+    public int getFoodItemId() {
+        return foodItemId;
     }
 
     /**
-     * @param fooditemid the fooditemid to set
+     * @param foodItemId the foodItemId to set
      */
-    public void setFooditemid(int fooditemid) {
-        this.fooditemid = fooditemid;
+    public void setFoodItemid(int foodItemId) {
+        this.foodItemId = foodItemId;
     }
     
     

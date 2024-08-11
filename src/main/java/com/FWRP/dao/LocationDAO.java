@@ -13,6 +13,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 /**
@@ -47,6 +49,7 @@ public class LocationDAO {
                     ResultSet generatedKeys = statement2.getGeneratedKeys();
                     if (generatedKeys.next()) {
                         location.setId(generatedKeys.getInt(1));
+                        return location;
                     }
                 }
             }
@@ -57,6 +60,50 @@ public class LocationDAO {
         }
         return null;
     }
+
+    public ArrayList<LocationDTO> getAllLocations() {
+        String sql = "SELECT id, name FROM Location ORDER BY name DESC;";
+        try (Connection con = DBConnection.getConnection(context);
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            try (ResultSet rs = pstmt.executeQuery()) {
+                ArrayList<LocationDTO> result = new ArrayList<>();
+                while (rs.next()) {
+                    LocationDTO resLocation = new LocationDTO(rs.getInt("id"),
+                            rs.getString("name"));
+                    result.add(resLocation);
+                }
+                logAndClearSQLWarnings("LocationDAO", con);
+                return result;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            // Log and clear any warnings
+            logAndClearSQLWarnings("LocationDAO",con);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public LocationDTO retrieve(int locationId) {
+        String sql = "SELECT name FROM Location WHERE id = ?";
+         LocationDTO location = new LocationDTO();
+        try (Connection con = DBConnection.getConnection(context);
+             PreparedStatement statement = con.prepareStatement(sql)) {
+            statement.setInt(1, locationId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                location.setName(resultSet.getString("name"));
+                return location;
+            }
+            // Log and clear any warnings
+            logAndClearSQLWarnings("LocationDAO",con);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        location.setName("Location not set");
+        return getOrCreate(location);
+    }
+    
     public LocationDTO retrieve(LocationDTO location) {
         String sql = "SELECT name FROM Location WHERE id = ?";
         try (Connection con = DBConnection.getConnection(context);
@@ -72,6 +119,7 @@ public class LocationDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        location.setName("Location not set");
+        return getOrCreate(location);
     }
 }

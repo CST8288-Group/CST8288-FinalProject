@@ -58,7 +58,7 @@ public class TransactionsDAO {
 
                     LocationDTO loc = new LocationDTO(rs.getInt("L.id"), rs.getString("L.name"));
 
-                    RetailerDTO retailer = new RetailerDTO(rs.getString("R.name"), loc, rs.getInt("R.userId"));
+                    RetailerDTO retailer = new RetailerDTO(rs.getString("R.name"), loc.getId(), rs.getInt("R.userId"));
 
                     FoodItemDTO fi = new FoodItemDTO(rs.getInt("FI.id"), rs.getString("FI.Name"));
 
