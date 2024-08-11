@@ -54,15 +54,13 @@ public class RetailerUpdate extends HttpServlet {
 
         String retailerName = request.getParameter("retailerName");
         String locationName = request.getParameter("location");
-        RetailerDTO retailer = new RetailerDTO();
-        LocationDTO location = new LocationDTO();
         
+        LocationDAO locDAO = new LocationDAO(context);
+        LocationDTO location = locDAO.getOrCreate(locationName);
+        
+        RetailerDTO retailer = new RetailerDTO();
         retailer.setUserId(userId.intValue());
         retailer.setName(retailerName);
-        
-        location.setName(locationName);
-        LocationDAO locDAO = new LocationDAO(context);
-        location = locDAO.getOrCreate(location);
         retailer.setLocationId(location.getId());
         
         RetailerDAO retailerDAO = new RetailerDAO(context);
